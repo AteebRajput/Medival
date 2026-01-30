@@ -1,0 +1,186 @@
+/* Font imports - must be at the top */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Medical Industry Design System - Blue & White Theme
+   All colors are in HSL format for consistency.
+*/
+
+@layer base {
+  :root {
+    /* Medical Blue & White Color Palette */
+    --background: 210 50% 98%;
+    --foreground: 215 50% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 50% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 50% 15%;
+
+    /* Primary - Medical Blue */
+    --primary: 210 100% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Light Blue */
+    --secondary: 210 60% 95%;
+    --secondary-foreground: 210 100% 30%;
+
+    /* Muted - Soft Gray Blue */
+    --muted: 210 30% 96%;
+    --muted-foreground: 215 20% 45%;
+
+    /* Accent - Vibrant Blue */
+    --accent: 205 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 30% 88%;
+    --input: 210 30% 88%;
+    --ring: 210 100% 40%;
+
+    --radius: 0.75rem;
+
+    /* Medical Industry Specific Colors */
+    --medical-navy: 215 50% 20%;
+    --medical-blue: 210 100% 40%;
+    --medical-light-blue: 205 100% 95%;
+    --medical-sky: 200 100% 70%;
+    --medical-teal: 185 60% 45%;
+    --medical-white: 0 0% 100%;
+    --medical-gray: 210 20% 60%;
+    
+    /* Gradient colors */
+    --gradient-start: 210 100% 40%;
+    --gradient-end: 200 100% 50%;
+
+    /* Sidebar */
+    --sidebar-background: 215 50% 15%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 210 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 50% 25%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 215 40% 25%;
+    --sidebar-ring: 210 100% 50%;
+  }
+
+  .dark {
+    --background: 215 50% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 215 50% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 215 50% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 40% 20%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 40% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 205 100% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 215 40% 20%;
+    --input: 215 40% 20%;
+    --ring: 210 100% 50%;
+
+    --medical-navy: 215 50% 15%;
+    --medical-blue: 210 100% 50%;
+    --medical-light-blue: 215 50% 20%;
+    --medical-sky: 200 80% 60%;
+    --medical-teal: 185 50% 40%;
+    --medical-white: 0 0% 98%;
+    --medical-gray: 210 20% 50%;
+
+    --sidebar-background: 215 50% 10%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 210 100% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 50% 18%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 215 40% 18%;
+    --sidebar-ring: 210 100% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    @apply font-semibold tracking-tight;
+  }
+}
+
+/* Custom utility classes */
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+  }
+
+  .bg-gradient-medical {
+    background-image: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/80 border border-white/20;
+  }
+
+  .shadow-medical {
+    box-shadow: 0 10px 40px -10px hsl(var(--primary) / 0.25);
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-300 ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
