@@ -23,7 +23,7 @@ export const certificates: Certificate[] = [
     expiryDate: "Sep 2026",
     issuingBody: "UKcert",
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769615563/ISO_9001_CERTIFICATE_1_-1_avdrgj.jpg",
-    description: "Quality management system standard specifically designed for the medical devices industry, ensuring consistent design, development, and production of medical devices.",
+    description: "Quality Management System certification ensuring controlled processes and consistent product quality.",
   },
   {
     id: "2",
@@ -33,17 +33,17 @@ export const certificates: Certificate[] = [
     expiryDate: "Mar 2026",
     issuingBody: "UKcert",
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769615571/ISO_14001_CERTIFICATE_1_-1_dnfffs.jpg",
-    description: "Environmental management system certification demonstrating our commitment to minimizing environmental impact and continuous improvement.",
+    description: "Environmental Management System certification reflecting our commitment to responsible and sustainable manufacturing.",
   },
   {
     id: "3",
-    name: "GMP Certificate",
+    name: "GMP Certification",
     category: "Quality",
     issueDate: "Mar 2025",
     expiryDate: "Jun 2028",
     issuingBody: "DRAP",
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769615584/GMP_CERTI_2_-1_iyrudv.jpg",
-    description: "Good Manufacturing Practice certification ensuring our products are consistently produced and controlled according to quality standards.",
+    description: "Manufactured in accordance with Good Manufacturing Practices (GMP) to maintain consistent quality and safety.",
   },
   // {
   //   id: "4",
@@ -108,13 +108,13 @@ export const certificates: Certificate[] = [
   // },
   {
     id: "12",
-    name: "Certificate Of Enlistment",
+    name: "DRAP Product Registration",
     category: "Medical",
     issueDate: "Jan 2025",
     expiryDate: "Dec 2029",
     issuingBody: "DRAP",
     image: ["https://res.cloudinary.com/duo8ezh6a/image/upload/v1769623683/CamScanner_01-28-2026_22.57_1__page-0001_pclxoj.jpg","https://res.cloudinary.com/duo8ezh6a/image/upload/v1769623683/CamScanner_01-28-2026_22.57_1__page-0002_htmbks.jpg","https://res.cloudinary.com/duo8ezh6a/image/upload/v1769623683/CamScanner_01-28-2026_22.57_1__page-0003_jph5hz.jpg"],
-    description: "License to manufacture and distribute Medical goods in Pakistan, meeting all regulatory requirements.",
+    description: "Our products are officially registered with DRAP, ensuring compliance with national regulatory standards.",
   },
 ];
 

@@ -1,7 +1,14 @@
 import { motion } from "framer-motion";
-import { Award, Shield, CheckCircle } from "lucide-react";
+import { Building2, Shield, Sparkles, TrendingUp, Users, Package } from "lucide-react";
 
-export const CertificateHero = () => {
+const stats = [
+  { value: "20+", label: "Years of Excellence" },
+  { value: "500+", label: "Healthcare Partners" },
+  { value: "1M+", label: "Products Delivered" },
+  { value: "100%", label: "Quality Assured" },
+];
+
+export const CompanyProfileHero = () => {
   return (
     <section className="relative pt-32 pb-20 bg-gradient-to-br from-medical-navy via-primary to-medical-navy overflow-hidden">
       {/* Background decorations */}
@@ -16,7 +23,7 @@ export const CertificateHero = () => {
         transition={{ duration: 5, repeat: Infinity }}
         className="absolute top-1/4 left-[10%] text-white/10"
       >
-        <Award className="h-24 w-24" />
+        <Building2 className="h-24 w-24" />
       </motion.div>
       <motion.div
         animate={{ y: [0, 15, 0], rotate: [0, -5, 0] }}
@@ -39,8 +46,8 @@ export const CertificateHero = () => {
             transition={{ delay: 0.2 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 text-white rounded-full text-sm font-medium mb-6 backdrop-blur-sm"
           >
-            <Award className="h-4 w-4" />
-            Quality Assured
+            <Sparkles className="h-4 w-4" />
+            Trusted Medical Supplies Manufacturer
           </motion.div>
 
           <motion.h1
@@ -49,7 +56,7 @@ export const CertificateHero = () => {
             transition={{ delay: 0.3 }}
             className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6"
           >
-            Our Certificates
+            Binding Wounds, Building Trust
           </motion.h1>
 
           <motion.p
@@ -58,23 +65,23 @@ export const CertificateHero = () => {
             transition={{ delay: 0.4 }}
             className="text-lg text-white/80 leading-relaxed mb-8"
           >
-            Our commitment to quality, safety, and compliance is supported by the following certifications and regulatory approvals.
+            Over 20 years of excellence in manufacturing premium medical supplies 
+            for healthcare institutions across Pakistan
           </motion.p>
 
-          {/* Trust badges */}
+          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="flex flex-wrap justify-center gap-6"
+            className="flex flex-wrap justify-center gap-8 md:gap-12"
           >
-            {["ISO 9001:2015", "ISO 14001", "DRAP GMP", ""].map((badge, index) => (
-              <div
-                key={badge}
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg backdrop-blur-sm"
-              >
-                <CheckCircle className="h-4 w-4 text-green-400" />
-                <span className="text-white text-sm font-medium">{badge}</span>
+            {stats.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white font-heading">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-white/60">{stat.label}</div>
               </div>
             ))}
           </motion.div>

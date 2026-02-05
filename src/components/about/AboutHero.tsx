@@ -58,8 +58,8 @@ export const AboutHero = () => {
             transition={{ delay: 0.4 }}
             className="text-lg text-white/80 leading-relaxed mb-8"
           >
-            For over 25 years, we've been dedicated to manufacturing premium quality 
-            medical supplies that healthcare professionals trust worldwide.
+            For over 20 years, we've been dedicated to manufacturing premium quality 
+            medical supplies that healthcare professionals trust across Pakistan.
           </motion.p>
 
           {/* Stats */}
@@ -70,9 +70,9 @@ export const AboutHero = () => {
             className="flex flex-wrap justify-center gap-8 md:gap-12"
           >
             {[
-              { value: "1998", label: "Founded" },
-              { value: "500+", label: "Employees" },
-              { value: "30+", label: "Countries" },
+              { value: "2006", label: "Founded" },
+              { value: "50+", label: "Skilled Professionals" },
+              { value: "100+", label: "Cities" },
               { value: "100M+", label: "Products Sold" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">

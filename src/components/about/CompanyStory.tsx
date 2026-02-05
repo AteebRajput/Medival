@@ -33,7 +33,7 @@ export const CompanyStory = () => {
               className="absolute -bottom-8 -right-8 bg-card rounded-2xl p-6 shadow-xl border border-border"
             >
               <Heart className="h-8 w-8 text-primary mb-2" />
-              <div className="text-2xl font-bold text-foreground font-heading">25+</div>
+              <div className="text-2xl font-bold text-foreground font-heading">20+</div>
               <p className="text-sm text-muted-foreground">Years of Care</p>
             </motion.div>
           </motion.div>
@@ -54,21 +54,16 @@ export const CompanyStory = () => {
 
             <div className="space-y-4 text-muted-foreground leading-relaxed mb-8">
               <p>
-                Founded in 1998, Sultan Bandages began as a small family business with a simple mission: 
-                to provide healthcare professionals with the highest quality cotton bandages and 
-                medical supplies. What started in a modest manufacturing unit has grown into a 
-                global enterprise serving hospitals and clinics across 30+ countries.
+              Established in Pakistan in 2006,<strong className="text-primary"> Sultan Cotton & Bandages </strong> began as a small manufacturing unit dedicated to producing <strong className="text-primary"> DRAP-registered </strong> premium medical supplies, including cotton bandages, cotton wool, crepe bandages, gauze lint, and gauze pads (USP Type IV & BPC). Built on a strong commitment to quality and reliability, our factory has steadily grown to meet the needs of hospitals, clinics, and distributors. 
               </p>
               <p>
-                Our founder, inspired by a personal experience with inadequate medical supplies, 
-                set out to create products that would never compromise on quality. This commitment 
-                has been the cornerstone of our success and continues to drive everything we do.
+              Today, our facility operates with modern machinery, skilled workers, and strict quality controls to ensure consistent, dependable products that meet international standards. Quality, efficiency, and trust remain at the core of everything produced within our factory gates. 
               </p>
-              <p>
+              {/* <p>
                 Today, we operate state-of-the-art manufacturing facilities equipped with the 
                 latest technology, employ over 500 dedicated professionals, and maintain the 
                 highest international quality standards including ISO 9001 and ISO 13485 certifications.
-              </p>
+              </p> */}
             </div>
 
             {/* Values */}

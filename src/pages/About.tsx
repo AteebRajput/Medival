@@ -39,7 +39,7 @@ const About = () => {
           <CompanyStory />
           <Timeline />
           <ManufacturingProcess />
-          <TeamSection />
+          {/* <TeamSection /> */}
           <WhyChooseUs />
         </main>
         <Footer />

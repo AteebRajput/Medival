@@ -19,7 +19,7 @@ const quickLinks = [
   { name: "About Us", href: "/about" },
   { name: "Products", href: "/products" },
   { name: "Certificates", href: "/certificates" },
-  { name: "Portfolio", href: "/portfolio" },
+  { name: "Company Profile", href: "/company-profile" },
   { name: "Contact Us", href: "/contact" },
 ];
 
@@ -52,7 +52,7 @@ export const Footer = () => {
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Newsletter Section */}
-        <div className="py-12 border-b border-white/10">
+        {/* <div className="py-12 border-b border-white/10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="text-2xl font-heading font-bold mb-2">
@@ -74,7 +74,7 @@ export const Footer = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Main Footer Content */}
         <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -89,7 +89,7 @@ export const Footer = () => {
               <img src="https://res.cloudinary.com/duo8ezh6a/image/upload/v1769527813/2_rnqi5j.svg" alt="Sultan Bandages Logo" className="w-24 h-24 object-contain" />
               <div className="ml-3">
                 <span className="font-heading font-bold text-xl">Sultan Bandages</span>
-                <span className="block text-xs text-white/70">Premium Medical Supplies</span>
+                <span className="block text-xs text-white/70">Binding Wounds, Building Trust</span>
               </div>
             </div>
             <p className="text-white/70 mb-6 leading-relaxed">
@@ -174,7 +174,7 @@ export const Footer = () => {
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-primary mr-3 shrink-0" />
                 <a href="tel:+1234567890" className="text-white/70 hover:text-white transition-colors">
-                  +92 (334) 3414085
+                  +92 (333) 3414085
                 </a>
               </li>
               <li className="flex items-center">
@@ -191,7 +191,7 @@ export const Footer = () => {
         <div className="py-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
           <p>© {currentYear} Sultan Bandages. All rights reserved.</p>
           <p className="flex items-center">
-            Made with <Heart className="h-4 w-4 mx-1 text-red-500" /> for Healthcare
+          Binding Wounds, Building Trust.
           </p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>

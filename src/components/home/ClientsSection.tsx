@@ -117,7 +117,7 @@ export const ClientsSection = () => {
         >
           {[
             { value: "500+", label: "Healthcare Partners" },
-            { value: "30+", label: "Countries Served" },
+            { value: "100+", label: "Cities Served" },
             { value: "100M+", label: "Products Delivered" },
           ].map((stat, index) => (
             <div key={stat.label} className="px-8">

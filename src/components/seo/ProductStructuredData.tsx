@@ -6,42 +6,49 @@ interface ProductStructuredDataProps {
 }
 
 export const ProductStructuredData = ({ products }: ProductStructuredDataProps) => {
-  const baseUrl = "https://medcotton.com"; // Replace with actual domain
+  const baseUrl = "https://sultanbandages.com";
 
   const productListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListElement: products.map((product, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      item: {
-        "@type": "Product",
-        "@id": `${baseUrl}/products#${product.id}`,
-        name: product.name,
-        description: product.description,
-        category: product.category,
-        offers: {
-          "@type": "Offer",
-          price: product.price,
-          priceCurrency: "USD",
-          availability: product.inStock
-            ? "https://schema.org/InStock"
-            : "https://schema.org/OutOfStock",
-          seller: {
+    itemListElement: products.map((product, index) => {
+      const lowestPrice = Math.min(...product.sizes.map(s => s.price));
+      const highestPrice = Math.max(...product.sizes.map(s => s.price));
+      
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Product",
+          "@id": `${baseUrl}/products#${product.id}`,
+          name: product.name,
+          description: product.description,
+          category: product.category,
+          offers: {
+            "@type": "AggregateOffer",
+            lowPrice: lowestPrice,
+            highPrice: highestPrice,
+            priceCurrency: "PKR",
+            availability: product.inStock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+            offerCount: product.sizes.length,
+            seller: {
+              "@type": "Organization",
+              name: "Sultan Cotton & Bandages",
+            },
+          },
+          brand: {
+            "@type": "Brand",
+            name: "Sultan Bandages",
+          },
+          manufacturer: {
             "@type": "Organization",
-            name: "MedCotton Industries",
+            name: "Sultan Cotton & Bandages",
           },
         },
-        brand: {
-          "@type": "Brand",
-          name: "MedCotton",
-        },
-        manufacturer: {
-          "@type": "Organization",
-          name: "MedCotton Industries",
-        },
-      },
-    })),
+      };
+    }),
   };
 
   return (
@@ -58,7 +65,9 @@ interface SingleProductSchemaProps {
 }
 
 export const SingleProductSchema = ({ product }: SingleProductSchemaProps) => {
-  const baseUrl = "https://medcotton.com";
+  const baseUrl = "https://sultanbandages.com";
+  const lowestPrice = Math.min(...product.sizes.map(s => s.price));
+  const highestPrice = Math.max(...product.sizes.map(s => s.price));
 
   const schema = {
     "@context": "https://schema.org",
@@ -69,21 +78,21 @@ export const SingleProductSchema = ({ product }: SingleProductSchemaProps) => {
     category: product.category,
     offers: {
       "@type": "AggregateOffer",
-      lowPrice: product.price,
-      highPrice: product.price * 1.5,
-      priceCurrency: "USD",
+      lowPrice: lowestPrice,
+      highPrice: highestPrice,
+      priceCurrency: "PKR",
       availability: product.inStock
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
       offerCount: product.sizes.length,
       seller: {
         "@type": "Organization",
-        name: "MedCotton Industries",
+        name: "Sultan Cotton & Bandages",
       },
     },
     brand: {
       "@type": "Brand",
-      name: "MedCotton",
+      name: "Sultan Bandages",
     },
     additionalProperty: product.features.map((feature) => ({
       "@type": "PropertyValue",

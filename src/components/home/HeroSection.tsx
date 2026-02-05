@@ -7,23 +7,23 @@ import { FloatingParticles } from "@/components/three/FloatingParticles";
 
 const heroSlides = [
   {
-    title: "Premium Quality Cotton Bandages",
-    subtitle: "Trusted by Healthcare Professionals Worldwide",
-    description: "Delivering excellence in medical supplies with ISO certified manufacturing and rigorous quality control.",
+    title: "Premium Medical-Grade Cotton Bandages",
+    subtitle: "Trusted by Healthcare Professionals",
+    description: "ISO-certified manufacturing of cotton bandages, cotton wool, crepe bandages, and gauze products with strict quality control at every stage.",
     cta: "Explore Products",
     ctaLink: "/products",
   },
   {
-    title: "Healing with Care & Precision",
-    subtitle: "Medical Grade Products Since 1995",
-    description: "Three decades of commitment to healthcare excellence. Our products meet the highest international standards.",
+    title: "Innovation Meets Quality in Healthcare",
+    subtitle: "Your Trusted Manufacturing Partner",
+    description: "From cotton bandages and cotton wool to gauze rolls, gauze lint, and USP/BPC gauze, we deliver consistent quality for hospitals, distributors, and institutions.",
     cta: "Learn More",
     ctaLink: "/about",
   },
   {
-    title: "Your Trusted Medical Partner",
-    subtitle: "Innovation Meets Quality in Healthcare",
-    description: "From cotton bandages to advanced medical supplies, we provide comprehensive solutions for healthcare providers.",
+    title: "Medical-Grade Manufacturing Since 2006",
+    subtitle: "Healing with Care & Precision",
+    description: "Over two decades of commitment to reliable, high-quality medical supplies that meet international healthcare standards.",
     cta: "View Certificates",
     ctaLink: "/certificates",
   },

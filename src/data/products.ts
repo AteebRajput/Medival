@@ -1,13 +1,20 @@
+export interface ProductSize {
+  size: string;
+  price: number;
+}
+
 export interface Product {
   id: string;
   name: string;
   description: string;
   category: string;
-  price: number;
-  sizes: string[];
+  sizes: ProductSize[];
   image: string | null;
   inStock: boolean;
   features: string[];
+  shelfLife: string;
+  storageCondition: string;
+  precautions: string;
 }
 
 export interface Category {
@@ -19,11 +26,15 @@ export interface Category {
 export const products: Product[] = [
   {
     id: "1",
-    name: "Cotton Bandage Roll",
-    description: "Premium quality cotton bandage roll for wound dressing and support. Highly absorbent and breathable material.",
+    name: "Pearl White Cotton Bandage B.P.C.",
+    description: "Cotton bandage is intended to be used as a mechanical barrier for compression or for absorption of exudates and to prevent bleeding from minor injuries.",
     category: "Cotton Bandages",
-    price: 4.99,
-    sizes: ["15CM*3M","10CM*3M","7.5CM*3M","5CM*3M"],
+    sizes: [
+      { size: "5 CM × 3 METER", price: 260 },
+      { size: "7.5 CM × 3 METER", price: 390 },
+      { size: "10 CM × 3 METER", price: 520 },
+      { size: "15 CM × 3 METER", price: 780 },
+    ],
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769783665/Gemini_Generated_Image_uwdr5kuwdr5kuwdr_1_xwo5gq.jpg",
     inStock: true,
     features: [
@@ -33,15 +44,21 @@ export const products: Product[] = [
       "Latex-free",
       "Individually wrapped",
     ],
+    shelfLife: "To be used within 3 years",
+    storageCondition: "To be stored in a cool and dry place and to be protected from heat and moisture",
+    precautions: "Cotton bandage should not be applied directly on wounds, sterilized before use",
   },
-
   {
     id: "4",
-    name: "Absorb Surgical Gauze Pads B.P.C",
-    description: "DRAP Pharmacopeia Type VII gauze pads meeting international standards for medical use.",
+    name: "Pearl White Absorb Surgical Gauze Pads B.P.C.",
+    description: "ABSORB SURGICAL GAUZE PADS B.P.C IS USED FOR ABSORPTION OF BLOOD AND EXUDATES AND PREVENT BLEEDING.",
     category: "Gauze Pads",
-    price: 9.99,
-    sizes: ["10CM*10CM","15CM*15CM","20CM*20CM","25CM*25CM"],
+    sizes: [
+      { size: "10 CM × 10 CM", price: 180 },
+      { size: "15 CM × 15 CM", price: 280 },
+      { size: "20 CM × 20 CM", price: 420 },
+      { size: "25 CM × 25 CM", price: 580 },
+    ],
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769783665/Gemini_Generated_Image_x7cfyax7cfyax7cf_1_hpxojc.jpg",
     inStock: true,
     features: [
@@ -51,14 +68,21 @@ export const products: Product[] = [
       "Sterile and individually wrapped",
       "Low-lint construction",
     ],
+    shelfLife: "To be used within 3 years",
+    storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE",
+    precautions: "ENSURE THE GAUZE PADS ARE STERILE AND PACKAGED PROPERLY BEFORE USE. DO NOT USE IF THE PACKAGING IS DAMAGED OR OPENED.",
   },
   {
     id: "5",
-    name: "Cotton Crepe Bandage BP",
-    description: "High-quality crepe bandage with excellent elasticity for compression therapy and joint support.",
+    name: "Pearl White Crepe Bandage B.P.",
+    description: "CREPE BANDAGE IS INTENDED TO BE USED A MECHANICAL BARRIER FOR COMPRESSION.",
     category: "Crepe Bandages",
-    price: 5.99,
-    sizes: ["10cm x 4.5m", "7.5cm x 4.5m", "10cm x 4.5m", "15cm x 4.5m"],
+    sizes: [
+      // { size: "5 CM × 4.5 METER", price: 220 },
+      { size: "7.5 CM × 4.5 M", price: 180 },
+      { size: "10 CM × 4.5 M", price: 240 },
+      { size: "15 CM × 4.5 M", price: 360 },
+    ],
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769783663/Gemini_Generated_Image_bu5dn4bu5dn4bu5d_1_fudfwx.png",
     inStock: true,
     features: [
@@ -68,15 +92,20 @@ export const products: Product[] = [
       "Washable and reusable",
       "Skin-friendly material",
     ],
+    shelfLife: "To be used within 3 years",
+    storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE ",
+    precautions: "CREPE BANDAGE SHOULD NOT BE STRETCHED TOO MUCH.",
   },
-
   {
     id: "7",
-    name: "Absorbent Cotton Wool ",
-    description: "Pure absorbent cotton wool for cleaning wounds, applying medications, and general medical use.",
+    name: "COTTON PEARL WHITE B.P.C. ABSORBENT COTTON WOOL (CARDED)",
+    description: "ABSORBENT COTTON WOOL IS INTENDED TO BE USED AS A MECHANICAL BARRIER FOR COMPRESSION OR FOR ABSORPTION OF EXUDATES AND TO PREVENT BLEEDING FROM MINOR INJURIES",
     category: "Cotton Wool",
-    price: 12.99,
-    sizes: ["100g", "250g", "500g","400mg", "1kg"],
+    sizes: [
+      { size: "100 GM", price: 150 },
+      { size: "200 GM", price: 300 },
+      { size: "400 GM", price: 600 },
+    ],
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769783662/Gemini_Generated_Image_1n04rc1n04rc1n04_1_k7luyf.jpg",
     inStock: true,
     features: [
@@ -86,16 +115,20 @@ export const products: Product[] = [
       "Medical grade purity",
       "Ideal for wound cleaning",
     ],
+    shelfLife: "To be used within 5 years",
+    storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE PROLONGED STORAGE WILL REDUCE ABSORBENCY OF PRODUCT",
+    precautions: "ABSORBENT COTTON WOOL SHOULD NOT BE APPLIED DIRECTLY ON WOUNDS, STERILIZED BEFORE USE",
   },
-
-
   {
     id: "11",
-    name: "Absorbent Gauze Roll BPC",
-    description: "Pre-cut sterile gauze swabs for wound cleaning and dressing. Individually packaged.",
+    name: "Pearl White Absorbent Cotton Gauze B.P.C.",
+    description: "ABSORBENT COTTON GAUZE B.P.C IS USED FOR ABSORPTION OF BLOOD AND EXUDATES AND PREVENT BLEEDING.",
     category: "Gauze Pads",
-    price: 11.99,
-    sizes: ["5cm x 5cm", "7.5cm x 7.5cm", "10cm x 10cm"],
+    sizes: [
+      { size: "1 M × 2.5 M", price: 150 },
+      { size: "1 M × 20 M", price: 1200 },
+      { size: "1 M × 40 M", price: 2400 },
+    ],
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769701342/Gemini_Generated_Image_a94ijra94ijra94i_ibidga.png",
     inStock: true,
     features: [
@@ -105,14 +138,19 @@ export const products: Product[] = [
       "High absorbency",
       "Suitable for all wound types",
     ],
+    shelfLife: "To be used within 3 years",
+    storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE",
+    precautions: "ENSURE THE ABSORBENT COTTON GAUZE B.P.C ARE STERILE AND PACKAGED PROPERLY BEFORE USE. DO NOT USE IF THE PACKAGING IS DAMAGED OR OPENED.",
   },
   {
     id: "12",
-    name: "Link Gauze BPC" ,
-    description: "Economical gauze roll for general medical applications and wound packing.",
+    name: "Pearl White Gauze Lint B.P.C.",
+    description: "GAUZE LINT B.P.C IS USED FOR ABSORPTION OF BLOOD AND EXUDATES AND PREVENT BLEEDING.",
     category: "Gauze Pads",
-    price: 6.99,
-    sizes: ["400mg"],
+    sizes: [
+      { size: "400 GM ", price: 1160 },
+      { size: "500 GM ", price: 1450 },
+    ],
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769783664/Gemini_Generated_Image_kzw2wskzw2wskzw2_1_zsirg8.png",
     inStock: true,
     features: [
@@ -122,6 +160,9 @@ export const products: Product[] = [
       "Easy to cut to size",
       "Bulk packaging available",
     ],
+    shelfLife: "To be used within 3 years",
+    storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE",
+    precautions: "ENSURE THE GAUZE LINT B.P.C ARE STERILE AND PACKAGED PROPERLY BEFORE USE. DO NOT USE IF THE PACKAGING IS DAMAGED OR OPENED.",
   },
 ];
 

@@ -26,8 +26,8 @@ const qualities = [
   },
   {
     icon: Sparkles,
-    title: "Sterile Manufacturing",
-    description: "State-of-the-art sterile production environments ensure contamination-free medical supplies.",
+    title: "Hygienic & Controlled Manufacturing ",
+    description: "Production is carried out in a clean, controlled environment with strict hygiene protocols to minimize contamination and ensure product safety.",
   },
   {
     icon: CheckCircle,

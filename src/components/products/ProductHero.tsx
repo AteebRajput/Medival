@@ -61,8 +61,7 @@ export const ProductHero = () => {
             transition={{ delay: 0.4 }}
             className="text-lg text-white/80 leading-relaxed"
           >
-            Explore our comprehensive range of medical-grade cotton bandages, gauze pads, 
-            and healthcare supplies. All products meet international quality standards.
+            Explore our comprehensive range of medical-grade cotton products, including Cotton Bandages, Cotton Wool, Crepe Bandages, Gauze Lint, and Gauze Pads (USP Type IV & BPC). All products are produced under strict quality control systems and comply with international healthcare standards. 
           </motion.p>
         </motion.div>
       </div>

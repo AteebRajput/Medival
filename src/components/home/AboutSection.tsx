@@ -10,10 +10,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 const products = [
   "Cotton Bandages",
+  "Absorbent Cotton Wool",
   "Gauze Pad BPC",
   "Gauze Pad USP Type",
   "Elasto Crepe Bandage",
-  "Absorbent Cotton Wool",
+  "Gauze Roll",
+  "Gauze Lint",
 ];
 
 export const AboutSection = () => {
@@ -77,7 +79,7 @@ export const AboutSection = () => {
               className="absolute -bottom-8 -right-8 bg-card rounded-2xl p-6 shadow-xl border border-border"
             >
               <div className="text-center">
-                <span className="text-4xl font-bold text-primary font-heading">25+</span>
+                <span className="text-4xl font-bold text-primary font-heading">20+</span>
                 <p className="text-muted-foreground text-sm mt-1">Years of Excellence</p>
               </div>
             </motion.div>
@@ -102,14 +104,11 @@ export const AboutSection = () => {
             </h2>
 
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              With over 25 years of experience, we have established ourselves as a trusted name 
-              in the medical supplies industry. Our commitment to quality, innovation, and customer 
-              satisfaction has made us the preferred choice for healthcare professionals worldwide.
+            With over 20 years of experience, we have established ourselves as a trusted name in the medical supplies industry. Our commitment to quality, innovation, and customer satisfaction has made us the preferred choice for healthcare professionals worldwide. 
             </p>
 
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              We specialize in manufacturing premium quality cotton bandages and medical dressings, 
-              adhering to the highest international standards including ISO, BPC, and USP guidelines.
+            We specialize in manufacturing premium quality cotton bandages and medical dressings, adhering to the highest international standards including ISO, BPC, and USP guidelines. Over the past two decades, we have become one of the leading suppliers of surgical products in Pakistan and Karachi, known for consistent quality, reliability, and service excellence. 
             </p>
 
             {/* Product List */}

@@ -35,12 +35,15 @@ const Products = () => {
     }
 
     // Sort products
+    const getLowestPrice = (product: typeof products[0]) => 
+      Math.min(...product.sizes.map(s => s.price));
+    
     switch (sortBy) {
       case "price-low":
-        filtered = [...filtered].sort((a, b) => a.price - b.price);
+        filtered = [...filtered].sort((a, b) => getLowestPrice(a) - getLowestPrice(b));
         break;
       case "price-high":
-        filtered = [...filtered].sort((a, b) => b.price - a.price);
+        filtered = [...filtered].sort((a, b) => getLowestPrice(b) - getLowestPrice(a));
         break;
       case "name":
       default:

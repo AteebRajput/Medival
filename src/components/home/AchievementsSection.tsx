@@ -5,10 +5,10 @@ import { Trophy, Users, Globe, Package, Award } from "lucide-react";
 const achievements = [
   {
     icon: Trophy,
-    value: 25,
+    value: 20,
     suffix: "+",
     label: "Years of Excellence",
-    description: "Decades of trusted service",
+    description: "Decades of trusted manufacturing service",
   },
   {
     icon: Package,
@@ -26,17 +26,17 @@ const achievements = [
   },
   {
     icon: Globe,
-    value: 30,
+    value: 100,
     suffix: "+",
-    label: "Countries Served",
-    description: "Global distribution network",
+    label: "Cities Served",
+    description: "Nation wide distribution network",
   },
   {
     icon: Award,
-    value: 15,
+    value: 5,
     suffix: "+",
     label: "Quality Certifications",
-    description: "International standards met",
+    description: "Quality & Compliance Certifications",
   },
 ];
 

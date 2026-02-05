@@ -16,16 +16,16 @@ const reasons = [
   {
     icon: Shield,
     title: "Uncompromising Quality",
-    description: "Every product undergoes 100+ quality checks to ensure it meets the highest medical standards.",
+    description: "Every product is manufactured under strict quality control processes to ensure reliability, safety, and performance.",
   },
   {
     icon: Award,
-    title: "Certified Excellence",
-    description: "ISO 9001, ISO 13485, CE marked, and FDA registered - we meet all international standards.",
+    title: "DRAP Registered & ISO Certified",
+    description: "Our products are DRAP registered and our manufacturing systems comply with ISO 9001:2015 and ISO 14001:2015 standards.",
   },
   {
     icon: Clock,
-    title: "Reliable Delivery",
+    title: "Proven Market Trust",
     description: "Our efficient logistics network ensures on-time delivery to healthcare facilities worldwide.",
   },
   {
@@ -71,7 +71,7 @@ export const WhyChooseUs = () => {
             Why Choose Us
           </h2>
           <p className="text-white/70 max-w-2xl mx-auto">
-            Discover what sets us apart as a trusted partner for healthcare institutions worldwide
+          Discover what makes us a trusted manufacturing partner for healthcare providers across Pakistan. 
           </p>
         </motion.div>
 
@@ -107,7 +107,7 @@ export const WhyChooseUs = () => {
           className="text-center"
         >
           <p className="text-white/80 mb-6">
-            Ready to experience the MedCotton difference?
+            Ready to experience the Sultan Cotton & Bandages difference?
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

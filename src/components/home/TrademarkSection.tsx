@@ -171,7 +171,7 @@ export const TrademarkSection = () => {
               </h3>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 Our registered trademark represents more than just a logo — it's a promise 
-                of uncompromising quality in medical supplies. For over 25 years, this symbol 
+                of uncompromising quality in medical supplies. For over 20 years, this symbol 
                 has stood for trust, reliability, and excellence in the healthcare industry.
               </p>
               <p className="text-muted-foreground leading-relaxed">

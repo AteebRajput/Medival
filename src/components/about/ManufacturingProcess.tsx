@@ -41,15 +41,15 @@ const processSteps = [
   },
   {
     step: 5,
-    title: "Sterile Packaging",
-    description: "Products are packaged in sterile conditions with advanced barrier materials for protection.",
+    title: "Final Inspection & Packaging",
+    description: "Finished products are inspected and packed in hygienic conditions, ensuring safety during storage and transportation.",
     icon: Package,
     color: "from-pink-500 to-rose-600",
   },
   {
     step: 6,
     title: "Distribution",
-    description: "Efficient logistics network ensures timely delivery to healthcare facilities worldwide.",
+    description: "Efficient logistics network ensures timely delivery to healthcare facilities across Pakistan.",
     icon: Truck,
     color: "from-teal-500 to-cyan-600",
   },
