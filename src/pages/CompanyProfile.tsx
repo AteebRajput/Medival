@@ -8,11 +8,8 @@ import {
   AboutUsSection,
   ProductRangeSection,
   CertificationsSection,
-  ManufacturingStrengthSection,
-  FactoryGallerySection,
   MarketPresenceSection,
   ValuedClientsSection,
-  CompanyProfileCTA,
 } from "@/components/company-profile";
 
 const CompanyProfile = () => {
@@ -44,11 +41,8 @@ const CompanyProfile = () => {
           <AboutUsSection />
           <ProductRangeSection />
           <CertificationsSection />
-          <ManufacturingStrengthSection />
-          <FactoryGallerySection />
           <MarketPresenceSection />
           <ValuedClientsSection />
-          {/* <CompanyProfileCTA /> */}
         </main>
         
         <Footer />

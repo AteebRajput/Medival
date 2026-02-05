@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Package, 
   Eye, 
@@ -9,7 +9,8 @@ import {
   FileText,
   X,
   Check,
-  ShoppingBag
+  ShoppingBag,
+  ZoomIn
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ interface Product {
   shelfLife: string;
   storageCondition: string;
   precautions: string;
+  comingSoon?: boolean;
 }
 
 interface ProductCardProps {
@@ -44,7 +46,17 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const lowestPrice = Math.min(...product.sizes.map(s => s.price));
+  const [isImageLightboxOpen, setIsImageLightboxOpen] = useState(false);
+  const [hoveredSizeIndex, setHoveredSizeIndex] = useState<number | null>(null);
+  const [selectedSizeIndex, setSelectedSizeIndex] = useState<number | null>(null);
+
+  const handleSizeInteraction = (index: number) => {
+    setSelectedSizeIndex(selectedSizeIndex === index ? null : index);
+  };
+
+  const isPriceVisible = (index: number) => {
+    return hoveredSizeIndex === index || selectedSizeIndex === index;
+  };
 
   return (
     <>
@@ -54,8 +66,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         className="group h-full"
       >
         <div className="h-full bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 flex flex-col">
-          {/* Product Image */}
-          <div className="relative aspect-[4/3] bg-gradient-to-br from-secondary to-muted overflow-hidden">
+          {/* Product Image - Clickable to enlarge */}
+          <div 
+            className="relative aspect-[4/3] bg-gradient-to-br from-secondary to-muted overflow-hidden cursor-pointer"
+            onClick={() => product.image && setIsImageLightboxOpen(true)}
+          >
             {product.image ? (
               <img
                 src={product.image}
@@ -71,24 +86,26 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             {/* Overlay on hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-            {/* Quick view button */}
-            <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              whileHover={{ scale: 1.05 }}
-              onClick={() => setIsModalOpen(true)}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-white text-foreground rounded-full text-sm font-medium flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
-            >
-              <Eye className="h-4 w-4" />
-              View Details
-            </motion.button>
+            {/* Zoom icon on hover */}
+            {product.image && (
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                  <ZoomIn className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            )}
 
             {/* Category badge */}
             <Badge className="absolute top-4 left-4 bg-white/90 text-foreground backdrop-blur-sm">
               {product.category}
             </Badge>
 
-            {/* Stock badge */}
-            {!product.inStock && (
+            {/* Coming Soon / Stock badge */}
+            {product.comingSoon ? (
+              <Badge className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 animate-pulse">
+                Coming Soon
+              </Badge>
+            ) : !product.inStock && (
               <Badge variant="destructive" className="absolute top-4 right-4">
                 Out of Stock
               </Badge>
@@ -102,34 +119,55 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               {product.name}
             </h3>
 
-            {/* Size & Price Table */}
+            {/* Size & Price - Clean display */}
             <div className="mb-4 flex-1">
-              <div className="bg-secondary/50 rounded-xl overflow-hidden">
-                <div className="grid grid-cols-2 gap-px bg-border/50">
-                  <div className="bg-primary/10 px-3 py-2">
-                    <span className="text-xs font-semibold text-primary uppercase tracking-wide">Size</span>
+              <div className="space-y-1.5">
+                {product.sizes.slice(0, 4).map((item, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSizeInteraction(index)}
+                    onMouseEnter={() => setHoveredSizeIndex(index)}
+                    onMouseLeave={() => setHoveredSizeIndex(null)}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                      isPriceVisible(index)
+                        ? 'bg-primary/10 border border-primary/20' 
+                        : 'bg-secondary/50 hover:bg-secondary border border-transparent'
+                    }`}
+                  >
+                    <span className="text-sm font-medium text-foreground">{item.size}</span>
+                    <AnimatePresence mode="wait">
+                      {isPriceVisible(index) ? (
+                        <motion.span
+                          key="price"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{ duration: 0.15 }}
+                          className="text-sm font-bold text-primary"
+                        >
+                          {product.comingSoon ? "TBA" : `Rs. ${item.price}`}
+                        </motion.span>
+                      ) : (
+                        <motion.div
+                          key="dots"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="flex gap-0.5"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                  <div className="bg-primary/10 px-3 py-2 text-right">
-                    <span className="text-xs font-semibold text-primary uppercase tracking-wide">Price (PKR)</span>
+                ))}
+                {product.sizes.length > 4 && (
+                  <div className="text-center py-1">
+                    <span className="text-xs text-muted-foreground">+{product.sizes.length - 4} more sizes</span>
                   </div>
-                </div>
-                <div className="divide-y divide-border/50">
-                  {product.sizes.slice(0, 3).map((item, index) => (
-                    <div key={index} className="grid grid-cols-2 gap-px">
-                      <div className="bg-card px-3 py-2">
-                        <span className="text-sm text-foreground">{item.size}</span>
-                      </div>
-                      <div className="bg-card px-3 py-2 text-right">
-                        <span className="text-sm font-semibold text-primary">Rs. {item.price}</span>
-                      </div>
-                    </div>
-                  ))}
-                  {product.sizes.length > 3 && (
-                    <div className="bg-card px-3 py-2 text-center">
-                      <span className="text-xs text-muted-foreground">+{product.sizes.length - 3} more sizes</span>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
             </div>
 
@@ -153,9 +191,42 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </motion.div>
 
-      {/* Product Detail Modal */}
+      {/* Image Lightbox */}
+      <AnimatePresence>
+        {isImageLightboxOpen && product.image && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl"
+            onClick={() => setIsImageLightboxOpen(false)}
+          >
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={() => setIsImageLightboxOpen(false)}
+              className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 hover:bg-white/20 transition-colors"
+            >
+              <X className="w-6 h-6 text-white" />
+            </motion.button>
+            
+            <motion.img
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              src={product.image}
+              alt={product.name}
+              className="max-w-[90vw] max-h-[85vh] object-contain rounded-2xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Product Detail Modal - Fixed left image, scrollable right */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl bg-card border-border p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl bg-card border-border p-0 overflow-hidden h-[90vh] max-h-[90vh]">
           {/* Close Button */}
           <button
             onClick={() => setIsModalOpen(false)}
@@ -164,9 +235,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <X className="h-5 w-5" />
           </button>
 
-          <div className="grid md:grid-cols-2">
-            {/* Image Section */}
-            <div className="relative aspect-square md:aspect-auto md:h-full bg-gradient-to-br from-secondary to-muted">
+          <div className="grid md:grid-cols-2 h-full">
+            {/* Image Section - Fixed/Sticky */}
+            <div className="relative bg-gradient-to-br from-secondary to-muted md:sticky md:top-0 md:h-[90vh]">
               {product.image ? (
                 <img
                   src={product.image}
@@ -181,47 +252,79 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               <Badge className="absolute top-4 left-4 bg-white/90 text-foreground">
                 {product.category}
               </Badge>
+              {product.comingSoon && (
+                <Badge className="absolute top-4 right-14 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                  Coming Soon
+                </Badge>
+              )}
             </div>
 
-            {/* Details Section */}
-            <div className="p-6 md:p-8 space-y-6">
+            {/* Details Section - Scrollable */}
+            <div className="p-6 md:p-8 space-y-6 overflow-y-auto max-h-[90vh]">
               {/* Product Name */}
               <div>
                 <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-2">
                   {product.name}
                 </h2>
-                <Badge variant={product.inStock ? "default" : "destructive"} className="bg-green-500/10 text-green-600 border-green-500/20">
-                  {product.inStock ? "In Stock" : "Out of Stock"}
-                </Badge>
+                {product.comingSoon ? (
+                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                    Coming Soon
+                  </Badge>
+                ) : (
+                  <Badge variant={product.inStock ? "default" : "destructive"} className="bg-green-500/10 text-green-600 border-green-500/20">
+                    {product.inStock ? "In Stock" : "Out of Stock"}
+                  </Badge>
+                )}
               </div>
 
-              {/* Sizes & Pricing Table */}
+              {/* Sizes - Hover/Click to reveal price */}
               <div>
                 <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Package className="h-4 w-4 text-primary" />
-                  Available Sizes & Pricing
+                  Available Sizes
                 </h4>
-                <div className="bg-secondary/30 rounded-xl overflow-hidden border border-border/50">
-                  <div className="grid grid-cols-2 bg-primary/10">
-                    <div className="px-4 py-3 border-r border-border/50">
-                      <span className="text-sm font-semibold text-primary">Size</span>
+                <div className="space-y-2">
+                  {product.sizes.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSizeInteraction(index)}
+                      onMouseEnter={() => setHoveredSizeIndex(index)}
+                      onMouseLeave={() => setHoveredSizeIndex(null)}
+                      className={`flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 ${
+                        isPriceVisible(index)
+                          ? 'bg-primary/10 border-2 border-primary/30' 
+                          : 'bg-secondary/30 border-2 border-transparent hover:border-primary/10'
+                      }`}
+                    >
+                      <span className="text-sm font-medium text-foreground">{item.size}</span>
+                      <AnimatePresence mode="wait">
+                        {isPriceVisible(index) ? (
+                          <motion.span
+                            key="price"
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            transition={{ duration: 0.15 }}
+                            className="text-sm font-bold text-primary"
+                          >
+                            {product.comingSoon ? "TBA" : `Rs. ${item.price}`}
+                          </motion.span>
+                        ) : (
+                          <motion.div
+                            key="dots"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex gap-1"
+                          >
+                            <span className="w-2 h-2 rounded-full bg-muted-foreground/20" />
+                            <span className="w-2 h-2 rounded-full bg-muted-foreground/20" />
+                            <span className="w-2 h-2 rounded-full bg-muted-foreground/20" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
-                    <div className="px-4 py-3 text-right">
-                      <span className="text-sm font-semibold text-primary">Retail Price (PKR)</span>
-                    </div>
-                  </div>
-                  <div className="divide-y divide-border/50">
-                    {product.sizes.map((item, index) => (
-                      <div key={index} className="grid grid-cols-2 hover:bg-primary/5 transition-colors">
-                        <div className="px-4 py-3 border-r border-border/50">
-                          <span className="text-sm text-foreground font-medium">{item.size}</span>
-                        </div>
-                        <div className="px-4 py-3 text-right">
-                          <span className="text-sm font-bold text-primary">Rs. {item.price}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -290,11 +393,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 <Button
                   asChild
                   size="lg"
-                  className="w-full bg-gradient-medical hover:opacity-90 text-white"
+                  className={`w-full text-white ${product.comingSoon ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90" : "bg-gradient-medical hover:opacity-90"}`}
                 >
                   <Link to="/contact">
                     <ShoppingBag className="h-5 w-5 mr-2" />
-                    Request Quote
+                    {product.comingSoon ? "Get Notified" : "Request Quote"}
                   </Link>
                 </Button>
               </div>

@@ -1,33 +1,25 @@
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
-import { Building2 } from "lucide-react";
 
-// Placeholder client logos - replace with actual client images
+// Client logos - all same size
 const clients = [
-  { name: "Healthcare Corp", logo: null },
-  { name: "MedTech Solutions", logo: null },
-  { name: "Global Health Inc", logo: null },
-  { name: "City Hospital Network", logo: null },
-  { name: "Premier Medical", logo: null },
-  { name: "United Healthcare", logo: null },
-  { name: "National Medical", logo: null },
-  { name: "Care First", logo: null },
-  { name: "Health Plus", logo: null },
-  { name: "Medical Group", logo: null },
+  { name: "Agha Khan Hospital", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284059/Gemini_Generated_Image_mlogramlogramlog_edoobl.png" },
+  { name: "Saifee Hospital", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284063/Gemini_Generated_Image_st5eqist5eqist5e_a6k6az.png" },
+  { name: "Bantva Memon Khidmat Committee", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284059/Gemini_Generated_Image_smtr8zsmtr8zsmtr_r7lccw.png" },
+  { name: "Liaquat National Hospital", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284058/Gemini_Generated_Image_lhite3lhite3lhit_caviyq.png" },
+  { name: "Friends Of Burns Centre", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284056/Gemini_Generated_Image_er4heier4heier4h_zbwgcs.png" },
+  { name: "Shaheed Mohtarma Benazir Bhutto Medical University (SMBBMU)", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284058/Gemini_Generated_Image_jdc3xyjdc3xyjdc3_ycovr8.png" },
+  { name: "Tabba Heart Institute", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284058/Gemini_Generated_Image_cp9d3dcp9d3dcp9d_fabt9g.png" },
+  { name: "Patel Hospital", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284057/Gemini_Generated_Image_3g65cx3g65cx3g65_vvkbkc.png" },
+  { name: "Marie Stopes Society", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284056/Gemini_Generated_Image_cdooscdooscdoosc_rurqpl.png" },
+  { name: "Bin Hashim Pharmacy & Supermarket", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284056/Gemini_Generated_Image_2wgc052wgc052wgc_fboipn.png" },
+  { name: "Zubaida Medical Centre (ZMC)", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284055/Gemini_Generated_Image_dp0uv7dp0uv7dp0u_gdqsbi.png" },
+  { name: "Government Tenders - Multiple Departments", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284054/GOP_vt52bx.png" },
 ];
 
 export const ClientsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  // Infinite scroll effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setScrollPosition((prev) => (prev + 1) % (clients.length * 200));
-    }, 30);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section 
@@ -53,59 +45,26 @@ export const ClientsSection = () => {
           </p>
         </motion.div>
 
-        {/* Scrolling Client Logos */}
-        <div className="relative overflow-hidden">
-          {/* Gradient masks */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-secondary/30 to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-secondary/30 to-transparent z-10" />
-
-          {/* First row - moving right */}
-          <motion.div
-            animate={{ x: [-scrollPosition, -scrollPosition - clients.length * 200] }}
-            transition={{ duration: 0, ease: "linear" }}
-            className="flex gap-8 mb-8"
-          >
-            {[...clients, ...clients].map((client, index) => (
-              <motion.div
-                key={`row1-${index}`}
-                whileHover={{ scale: 1.05 }}
-                className="flex-shrink-0 w-44 h-24 bg-card rounded-xl border border-border flex items-center justify-center shadow-sm hover:shadow-md hover:border-primary/30 transition-all cursor-pointer"
-              >
-                {client.logo ? (
-                  <img src={client.logo} alt={client.name} className="max-w-[80%] max-h-[60%] object-contain" />
-                ) : (
-                  <div className="text-center">
-                    <Building2 className="h-8 w-8 text-muted-foreground mx-auto mb-1" />
-                    <span className="text-xs text-muted-foreground">{client.name}</span>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Second row - moving left */}
-          <motion.div
-            animate={{ x: [scrollPosition - clients.length * 200, scrollPosition] }}
-            transition={{ duration: 0, ease: "linear" }}
-            className="flex gap-8"
-          >
-            {[...clients, ...clients].reverse().map((client, index) => (
-              <motion.div
-                key={`row2-${index}`}
-                whileHover={{ scale: 1.05 }}
-                className="flex-shrink-0 w-44 h-24 bg-card rounded-xl border border-border flex items-center justify-center shadow-sm hover:shadow-md hover:border-primary/30 transition-all cursor-pointer"
-              >
-                {client.logo ? (
-                  <img src={client.logo} alt={client.name} className="max-w-[80%] max-h-[60%] object-contain" />
-                ) : (
-                  <div className="text-center">
-                    <Building2 className="h-8 w-8 text-muted-foreground mx-auto mb-1" />
-                    <span className="text-xs text-muted-foreground">{client.name}</span>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </motion.div>
+        {/* Static Client Logos Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+          {clients.map((client, index) => (
+            <motion.div
+              key={client.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              className="bg-card rounded-xl border border-border p-4 flex items-center justify-center shadow-sm hover:shadow-md hover:border-primary/30 transition-shadow"
+            >
+              <div className="w-24 h-24 flex items-center justify-center">
+                <img 
+                  src={client.logo} 
+                  alt={client.name} 
+                  className="w-20 h-20 object-contain"
+                  title={client.name}
+                />
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Trust indicators */}
@@ -119,7 +78,7 @@ export const ClientsSection = () => {
             { value: "500+", label: "Healthcare Partners" },
             { value: "100+", label: "Cities Served" },
             { value: "100M+", label: "Products Delivered" },
-          ].map((stat, index) => (
+          ].map((stat) => (
             <div key={stat.label} className="px-8">
               <div className="text-3xl md:text-4xl font-bold text-primary font-heading">{stat.value}</div>
               <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>

@@ -45,16 +45,16 @@ export const certificates: Certificate[] = [
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769615584/GMP_CERTI_2_-1_iyrudv.jpg",
     description: "Manufactured in accordance with Good Manufacturing Practices (GMP) to maintain consistent quality and safety.",
   },
-  // {
-  //   id: "4",
-  //   name: "FDA Registration",
-  //   category: "Medical",
-  //   issueDate: "Sep 2022",
-  //   expiryDate: "Ongoing",
-  //   issuingBody: "U.S. FDA",
-  //   image: null,
-  //   description: "Registration with the United States Food and Drug Administration for manufacturing and distributing medical devices in the US market.",
-  // },
+  {
+    id: "4",
+    name: "DRAP Manufacturing License",
+    category: "Medical",
+    issueDate: "Aug 2024",
+    expiryDate: "Aug 2029",
+    issuingBody: "DRAP",
+    image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770282437/WhatsApp_Image_2026-02-04_at_9.38.38_PM_1__page-0001_aklcfq.jpg",
+    description: "Licensed by the Drug Regulatory Authority of Pakistan for the manufacturing of medical supplies.",
+  },
 
   // {
   //   id: "7",

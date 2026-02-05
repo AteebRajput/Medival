@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
@@ -29,29 +29,72 @@ const heroSlides = [
   },
 ];
 
+const SLIDE_INTERVAL = 5000; // 5 seconds
+const PAUSE_AFTER_INTERACTION = 8000; // 8 seconds pause after manual interaction
+
 export const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startAutoPlay = useCallback(() => {
+    // Clear any existing interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    // Start new interval
+    intervalRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, SLIDE_INTERVAL);
+  }, []);
+
+  const pauseAutoPlay = useCallback(() => {
+    // Clear interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    // Clear any existing resume timeout
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+    }
+    // Resume after delay
+    pauseTimeoutRef.current = setTimeout(() => {
+      startAutoPlay();
+    }, PAUSE_AFTER_INTERACTION);
+  }, [startAutoPlay]);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  }, []);
+    pauseAutoPlay();
+  }, [pauseAutoPlay]);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  }, []);
+    pauseAutoPlay();
+  }, [pauseAutoPlay]);
 
+  const goToSlide = useCallback((index: number) => {
+    setCurrentSlide(index);
+    pauseAutoPlay();
+  }, [pauseAutoPlay]);
+
+  // Start auto-play on mount
   useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(nextSlide, 6000);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, nextSlide]);
+    startAutoPlay();
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      if (pauseTimeoutRef.current) {
+        clearTimeout(pauseTimeoutRef.current);
+      }
+    };
+  }, [startAutoPlay]);
 
   return (
     <section 
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-medical-navy via-primary to-medical-navy"
-      onMouseEnter={() => setIsAutoPlaying(false)}
-      onMouseLeave={() => setIsAutoPlaying(true)}
     >
       {/* 3D Particles Background */}
       <FloatingParticles />
@@ -177,7 +220,7 @@ export const HeroSection = () => {
             {heroSlides.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentSlide(index)}
+                onClick={() => goToSlide(index)}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   currentSlide === index
                     ? "w-8 bg-white"

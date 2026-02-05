@@ -19,7 +19,7 @@ export const CompanyStory = () => {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img 
-                src="https://res.cloudinary.com/duo8ezh6a/image/upload/v1769529736/Factory_Gate_Sign_aqt48r.png" 
+                src="https://res.cloudinary.com/duo8ezh6a/image/upload/v1770222861/Gemini_Generated_Image_3bwird3bwird3bwi_1_ewy4gu.png" 
                 alt="Sultan Bandages" 
                 className="w-full h-full aspect-[4/3] object-cover rounded-2xl" 
               />

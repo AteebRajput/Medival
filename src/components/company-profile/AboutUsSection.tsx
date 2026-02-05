@@ -79,7 +79,7 @@ export const AboutUsSection = () => {
                   >
                     <Building2 className="w-16 h-16 text-white" />
                   </motion.div>
-                  <h3 className="text-2xl font-heading font-bold mb-2">Est. 2004</h3>
+                  <h3 className="text-2xl font-heading font-bold mb-2">Est. 2006</h3>
                   <p className="text-muted-foreground">Serving Healthcare Since</p>
                   
                   <div className="mt-8 grid grid-cols-2 gap-4">

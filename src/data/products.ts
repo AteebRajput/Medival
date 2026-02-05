@@ -15,6 +15,7 @@ export interface Product {
   shelfLife: string;
   storageCondition: string;
   precautions: string;
+  comingSoon?: boolean;
 }
 
 export interface Category {
@@ -30,10 +31,10 @@ export const products: Product[] = [
     description: "Cotton bandage is intended to be used as a mechanical barrier for compression or for absorption of exudates and to prevent bleeding from minor injuries.",
     category: "Cotton Bandages",
     sizes: [
-      { size: "5 CM × 3 METER", price: 260 },
-      { size: "7.5 CM × 3 METER", price: 390 },
-      { size: "10 CM × 3 METER", price: 520 },
-      { size: "15 CM × 3 METER", price: 780 },
+      { size: "5 CM × 3 M", price: 260 },
+      { size: "7.5 CM × 3 M", price: 390 },
+      { size: "10 CM × 3 M", price: 520 },
+      { size: "15 CM × 3 M", price: 780 },
     ],
     image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769783665/Gemini_Generated_Image_uwdr5kuwdr5kuwdr_1_xwo5gq.jpg",
     inStock: true,
@@ -164,6 +165,52 @@ export const products: Product[] = [
     storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE",
     precautions: "ENSURE THE GAUZE LINT B.P.C ARE STERILE AND PACKAGED PROPERLY BEFORE USE. DO NOT USE IF THE PACKAGING IS DAMAGED OR OPENED.",
   },
+  {
+    id: "13",
+    name: "Pearl White Absorbent Gauze Pad USP TYPE-IV",
+    description: "ABSORBENT GAUZE PAD USP TYPE-IV IS USED FOR ABSORPTION OF BLOOD AND EXUDATES AND PREVENT BLEEDING",
+    category: "Gauze Pads",
+    sizes: [
+      { size: "10 CM × 10 CM (1*100)(8PLY)", price: 1200},
+      // { size: "500 GM ", price: 1450 },
+    ],
+    image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1769783664/Gemini_Generated_Image_pvos1pvos1pvos1p_1_dqmv6g.jpg",
+    inStock: true,
+    features: [
+      "Cost-effective option",
+      "Versatile applications",
+      "High thread count",
+      "Easy to cut to size",
+      "Bulk packaging available",
+    ],
+    shelfLife: "To be used within 3 years",
+    storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE",
+    precautions: "ENSURE THE ABSORBENT GAUZE PAD USP TYPE-IV ARE STERILE AND PACKAGED PROPERLY BEFORE USE. DO NOT USE IF THE PACKAGING IS DAMAGED OR OPENED.",
+  },
+  {
+    id: "14",
+    name: "Plaster Of Paris",
+    description: "",
+    category: "Plaster Of Paris",
+    sizes: [
+      // { size: "7.5 CM × 2.7 M", price: 0 },
+      // { size: "10 CM × 2.7 M", price: 0 },
+      // { size: "15 CM × 2.7 M", price: 0 },
+    ],
+    image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770281599/Gemini_Generated_Image_4enls14enls14enl_d597qu.png",
+    inStock: false,
+    features: [
+      // "Quick setting time",
+      // "High strength when dry",
+      // "Easy to mold and shape",
+      // "Smooth finish",
+      // "Medical grade quality",
+    ],
+    shelfLife: "",
+    storageCondition: "",
+    precautions: "",
+    comingSoon: true,
+  },
 ];
 
 export const categories: Category[] = [
@@ -172,4 +219,5 @@ export const categories: Category[] = [
   { id: "Gauze Pads", name: "Gauze Pads", count: products.filter(p => p.category === "Gauze Pads").length },
   { id: "Crepe Bandages", name: "Crepe Bandages", count: products.filter(p => p.category === "Crepe Bandages").length },
   { id: "Cotton Wool", name: "Cotton Wool", count: products.filter(p => p.category === "Cotton Wool").length },
+  { id: "Plaster Of Paris", name: "Plaster Of Paris", count: products.filter(p => p.category === "Plaster Of Paris").length },
 ];
