@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-// Client logos - all same size
+// Client logos
 const clients = [
   { name: "Agha Khan Hospital", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284059/Gemini_Generated_Image_mlogramlogramlog_edoobl.png" },
   { name: "Saifee Hospital", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284063/Gemini_Generated_Image_st5eqist5eqist5e_a6k6az.png" },
@@ -17,9 +17,58 @@ const clients = [
   { name: "Government Tenders - Multiple Departments", logo: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770284054/GOP_vt52bx.png" },
 ];
 
+// Marquee component for smooth infinite scroll
+const Marquee = ({ 
+  children, 
+  direction = "left", 
+  speed = 25 
+}: { 
+  children: React.ReactNode; 
+  direction?: "left" | "right"; 
+  speed?: number;
+}) => {
+  return (
+    <div className="flex overflow-hidden">
+      <motion.div
+        className="flex gap-6 shrink-0"
+        animate={{
+          x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"],
+        }}
+        transition={{
+          x: {
+            duration: speed,
+            repeat: Infinity,
+            ease: "linear",
+            repeatType: "loop",
+          },
+        }}
+      >
+        {children}
+        {children}
+      </motion.div>
+    </div>
+  );
+};
+
+// Logo Card Component
+const LogoCard = ({ client }: { client: { name: string; logo: string } }) => (
+  <div className="shrink-0 w-44 h-28 bg-card rounded-2xl border border-border/50 flex items-center justify-center shadow-sm hover:shadow-xl hover:border-primary/30 hover:scale-105 transition-all duration-300 cursor-pointer group">
+    <img 
+      src={client.logo} 
+      alt={client.name} 
+      className="w-20 h-20 object-contain group-hover:scale-110 transition-transform duration-300"
+      title={client.name}
+    />
+  </div>
+);
+
 export const ClientsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+  // Split clients into two groups
+  const firstHalf = clients.slice(0, 6);
+  const secondHalf = clients.slice(6, 12);
 
   return (
     <section 
@@ -45,26 +94,29 @@ export const ClientsSection = () => {
           </p>
         </motion.div>
 
-        {/* Static Client Logos Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-          {clients.map((client, index) => (
-            <motion.div
-              key={client.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="bg-card rounded-xl border border-border p-4 flex items-center justify-center shadow-sm hover:shadow-md hover:border-primary/30 transition-shadow"
-            >
-              <div className="w-24 h-24 flex items-center justify-center">
-                <img 
-                  src={client.logo} 
-                  alt={client.name} 
-                  className="w-20 h-20 object-contain"
-                  title={client.name}
-                />
-              </div>
-            </motion.div>
-          ))}
+        {/* Animated Marquee Logos */}
+        <div className="relative">
+          {/* Gradient masks for smooth fade effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-secondary/30 via-secondary/30 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-secondary/30 via-secondary/30 to-transparent z-10 pointer-events-none" />
+
+          {/* Row 1 - Moving from RIGHT to LEFT (entering from right) */}
+          <div className="mb-6">
+            <Marquee direction="left" speed={30}>
+              {clients.map((client, index) => (
+                <LogoCard key={`row1-${index}`} client={client} />
+              ))}
+            </Marquee>
+          </div>
+
+          {/* Row 2 - Moving from LEFT to RIGHT (entering from left) */}
+          <div>
+            <Marquee direction="right" speed={35}>
+              {[...clients].reverse().map((client, index) => (
+                <LogoCard key={`row2-${index}`} client={client} />
+              ))}
+            </Marquee>
+          </div>
         </div>
 
         {/* Trust indicators */}

@@ -108,7 +108,7 @@ export const AboutSection = () => {
             </p>
 
             <p className="text-muted-foreground mb-8 leading-relaxed">
-            We specialize in manufacturing premium quality cotton bandages and medical dressings, adhering to the highest international standards including ISO, BPC, and USP guidelines. Over the past two decades, we have become one of the leading suppliers of surgical products in Pakistan and Karachi, known for consistent quality, reliability, and service excellence. 
+            We specialize in manufacturing premium quality cotton bandages and medical dressings, adhering to the highest international standards including ISO, BPC, and USP guidelines. Over the past two decades, we have become one of the <strong> leading suppliers of surgical products in Pakistan and Karachi </strong>, known for consistent quality, reliability, and service excellence. 
             </p>
 
             {/* Product List */}
