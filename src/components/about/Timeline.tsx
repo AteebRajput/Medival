@@ -3,12 +3,12 @@ import { useRef } from "react";
 import { Flag, Award, Globe, Factory, Users, Sparkles } from "lucide-react";
 
 const timelineEvents = [
-  {
-    year: "2006",
-    title: "Company History",
-    description: "From a focused manufacturing unit to a trusted name in Pakistan’s healthcare industry. ",
-    icon: Flag,
-  },
+  // {
+  //   year: "2006",
+  //   title: "Company History",
+  //   description: "From a focused manufacturing unit to a trusted name in Pakistan’s healthcare industry. ",
+  //   icon: Flag,
+  // },
   {
     year: "2006",
     title: "Factory Established",
@@ -67,7 +67,7 @@ export const Timeline = () => {
             Company <span className="text-gradient">History</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            From humble beginnings to global recognition, here's our journey of growth and excellence
+          From a focused manufacturing unit to a trusted name in Pakistan’s healthcare industry.
           </p>
         </motion.div>
 

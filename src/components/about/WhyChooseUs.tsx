@@ -26,7 +26,7 @@ const reasons = [
   {
     icon: Clock,
     title: "Proven Market Trust",
-    description: "Our efficient logistics network ensures on-time delivery to healthcare facilities worldwide.",
+    description: "Our Cotton bandages and cotton wool are among the best-selling products across Pakistan, trusted by hospitals and distributors.",
   },
   {
     icon: HeartHandshake,
@@ -40,8 +40,8 @@ const reasons = [
   },
   {
     icon: Globe,
-    title: "Global Reach",
-    description: "Serving 30+ countries with consistent quality and local support in major markets.",
+    title: "Reliable Delivery",
+    description: "Strong production planning and efficient logistics ensure timely and consistent supply to our partners.",
   },
 ];
 
@@ -65,7 +65,7 @@ export const WhyChooseUs = () => {
           className="text-center mb-16"
         >
           <span className="inline-block px-4 py-1.5 bg-white/10 text-white rounded-full text-sm font-medium mb-4 backdrop-blur-sm">
-            Why MedCotton
+            Why Sultan Cotton & Bandages
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-4">
             Why Choose Us

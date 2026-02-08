@@ -1,85 +1,126 @@
-import { motion } from "framer-motion";
-import { Factory, Users, Shield, Package } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { Factory, Cog, Users, ShieldCheck, Cpu, Package } from "lucide-react";
 
-const FACTORY_VIDEO_URL = "https://res.cloudinary.com/duo8ezh6a/video/upload/v1770224817/WhatsApp_Video_2026-02-03_at_12.08.59_AM_fgd5ow.mp4";
+const strengths = [
+  {
+    icon: Cpu,
+    title: "Modern Machinery",
+    description: "State-of-the-art equipment for precision manufacturing",
+  },
+  {
+    icon: Users,
+    title: "Skilled Workforce",
+    description: "Experienced professionals dedicated to excellence",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Quality Control",
+    description: "Rigorous testing at every production stage",
+  },
+  {
+    icon: Package,
+    title: "Safe Packaging",
+    description: "Careful packaging ensuring product integrity",
+  },
+];
 
 export const ManufacturingStrengthSection = () => {
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
-    <section className="py-20 lg:py-32 bg-gradient-to-br from-medical-navy via-primary/90 to-medical-navy relative overflow-hidden">
-      {/* Animated Background */}
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-10"
-      >
-        <div className="w-full h-full border-2 border-white/20 rounded-full" />
-        <div className="absolute inset-10 border-2 border-white/15 rounded-full" />
-        <div className="absolute inset-20 border-2 border-white/10 rounded-full" />
-      </motion.div>
+    <section ref={ref} className="py-20 lg:py-28 bg-background relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-secondary/30 to-transparent" />
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Content Side */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 text-white rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6">
               <Factory className="w-4 h-4" />
               Manufacturing Strength
             </span>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 leading-tight">
-              State-of-the-Art Production Facility
+
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-6 leading-tight">
+              Built for Excellence
             </h2>
-            <p className="text-lg text-white/80 leading-relaxed mb-8">
-              Our factory is equipped with modern machinery, a skilled workforce, and rigorous quality 
-              control systems. From raw material selection to final packaging, every stage is carefully 
-              monitored to ensure safety and reliability.
+
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              Our factory is equipped with modern machinery, a skilled workforce, and rigorous quality control systems. From raw material selection to final packaging, every stage is carefully monitored to ensure safety and reliability.
             </p>
-            
+
+            {/* Strength Grid */}
             <div className="grid sm:grid-cols-2 gap-4">
-              {[
-                { label: "Modern Machinery", icon: Factory },
-                { label: "Skilled Workforce", icon: Users },
-                { label: "Quality Control", icon: Shield },
-                { label: "Safe Packaging", icon: Package },
-              ].map((item, index) => (
+              {strengths.map((strength, index) => (
                 <motion.div
-                  key={item.label}
+                  key={strength.title}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10"
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
+                  className="group p-4 bg-secondary/50 rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300"
                 >
-                  <item.icon className="w-6 h-6 text-cyan-400" />
-                  <span className="font-medium text-white">{item.label}</span>
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <strength.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-1">{strength.title}</h4>
+                      <p className="text-sm text-muted-foreground">{strength.description}</p>
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
+          {/* Stats Side */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, x: 30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2 }}
             className="relative"
           >
-            <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl border border-white/20">
-              <video
-                src={FACTORY_VIDEO_URL}
-                controls
-                className="w-full h-full object-cover"
-                poster=""
-                preload="metadata"
-              >
-                Your browser does not support the video tag.
-              </video>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { value: "20+", label: "Years Experience" },
+                { value: "500+", label: "Healthcare Partners" },
+                { value: "100M+", label: "Products Delivered" },
+                { value: "100%", label: "Quality Commitment" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+                  className="relative group"
+                >
+                  <div className="p-6 bg-card rounded-2xl border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300 text-center">
+                    <div className="text-3xl md:text-4xl font-bold text-primary font-heading mb-2">
+                      {stat.value}
+                    </div>
+                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-            <div className="absolute -bottom-4 -right-4 bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-              <p className="text-white font-medium text-sm">Factory Tour</p>
-              <p className="text-white/60 text-xs">See our production in action</p>
-            </div>
+
+            {/* Decorative Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.7, duration: 0.5 }}
+              className="absolute -bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 bg-primary text-white rounded-full shadow-lg"
+            >
+              <span className="text-sm font-semibold">
+                DRAP Registered Manufacturer
+              </span>
+            </motion.div>
           </motion.div>
         </div>
       </div>

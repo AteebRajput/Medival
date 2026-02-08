@@ -7,7 +7,7 @@ import { FloatingParticles } from "@/components/three/FloatingParticles";
 
 const heroSlides = [
   {
-    title: "Premium Medical-Grade Cotton Bandages",
+    title: "Premium Medical-Grade Cotton Products",
     subtitle: "Trusted by Healthcare Professionals",
     description: "ISO-certified manufacturing of cotton bandages, cotton wool, crepe bandages, and gauze products with strict quality control at every stage.",
     cta: "Explore Products",

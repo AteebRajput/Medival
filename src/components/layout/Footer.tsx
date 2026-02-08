@@ -89,7 +89,7 @@ export const Footer = () => {
             <div className="flex items-center mb-6">
               <img src="https://res.cloudinary.com/duo8ezh6a/image/upload/v1769527813/2_rnqi5j.svg" alt="Sultan Bandages Logo" className="w-24 h-24 object-contain" />
               <div className="ml-3">
-                <span className="font-heading font-bold text-xl">Sultan Bandages</span>
+                <span className="font-heading font-bold text-xl">Sultan Cotton & Bandages</span>
                 <span className="block text-xs text-white/70">Binding Wounds, Building Trust</span>
               </div>
             </div>
@@ -190,7 +190,7 @@ export const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="py-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
-          <p>© {currentYear} Sultan Bandages. All rights reserved.</p>
+          <p>© {currentYear} Sultan Cotton & Bandages. All rights reserved.</p>
           <p className="flex items-center">
           Binding Wounds, Building Trust.
           </p>

@@ -68,7 +68,7 @@ export const CertificateHero = () => {
             transition={{ delay: 0.5 }}
             className="flex flex-wrap justify-center gap-6"
           >
-            {["ISO 9001:2015", "ISO 14001", "DRAP GMP", ].map((badge, index) => (
+            {["ISO 9001:2015", "ISO 14001", "DRAP","GMP" ].map((badge, index) => (
               <div
                 key={badge}
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg backdrop-blur-sm"
