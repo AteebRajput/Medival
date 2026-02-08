@@ -49,7 +49,7 @@ export const CertificateHero = () => {
             transition={{ delay: 0.3 }}
             className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6"
           >
-            Our Certificates
+            Our Certificates & License
           </motion.h1>
 
           <motion.p

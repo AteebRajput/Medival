@@ -19,8 +19,8 @@ const CompanyProfile = () => {
   const handleDownload = () => {
     // Create a link element and trigger download
     const link = document.createElement("a");
-    link.href = "/Company Profile.docx";
-    link.download = "Sultan Cotton & Bandages - Company Profile.docx";
+    link.href = "/Company Profile.pdf";
+    link.download = "Sultan Cotton & Bandages - Company Profile.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

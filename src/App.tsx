@@ -6,6 +6,9 @@ import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AnimatedRoutes } from "@/components/layout/AnimatedRoutes";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import { CartProvider } from "@/context/CartContext";
+import { CartSidebar } from "@/components/cart/CartSidebar";
+import { FloatingCartButton } from "@/components/cart/FloatingCartButton";
 
 const queryClient = new QueryClient();
 
@@ -16,8 +19,12 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <ScrollToTop />
-          <AnimatedRoutes />
+          <CartProvider>
+            <ScrollToTop />
+            <AnimatedRoutes />
+            <CartSidebar />
+            <FloatingCartButton />
+          </CartProvider>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

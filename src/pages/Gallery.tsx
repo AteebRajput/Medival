@@ -1,14 +1,19 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Play, 
-  Image as ImageIcon, 
   ChevronLeft, 
   ChevronRight, 
-  Film,
-  Pause,
   X,
-  ZoomIn
+  ZoomIn,
+  Factory,
+  Play,
+  Sparkles,
+  Shield,
+  Award,
+  Cog,
+  Users,
+  Package,
+  Eye
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -34,56 +39,37 @@ const factoryImages = [
   { id: 12, src: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770274803/WhatsApp_Image_2026-02-02_at_11.15.06_PM_hdlbsc.jpg" },
 ];
 
+const facilityFeatures = [
+  { icon: Cog, label: "Modern Machinery", desc: "State-of-the-art equipment" },
+  { icon: Users, label: "Skilled Team", desc: "Expert professionals" },
+  { icon: Shield, label: "Quality Control", desc: "Rigorous standards" },
+  { icon: Package, label: "Safe Packaging", desc: "Hygienic processing" },
+];
+
 const Gallery = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [direction, setDirection] = useState(0);
-  const thumbnailRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-play functionality
-  useEffect(() => {
-    if (!isAutoPlaying || isLightboxOpen) return;
-    
-    const interval = setInterval(() => {
-      setDirection(1);
-      setCurrentIndex((prev) => (prev + 1) % factoryImages.length);
-    }, 3500);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, isLightboxOpen]);
-
-  // Scroll thumbnail into view
-  useEffect(() => {
-    if (thumbnailRef.current) {
-      const thumbnail = thumbnailRef.current.children[currentIndex] as HTMLElement;
-      if (thumbnail) {
-        thumbnail.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      }
-    }
-  }, [currentIndex]);
+  const openLightbox = (index: number) => {
+    setCurrentIndex(index);
+    setIsLightboxOpen(true);
+  };
 
   const goToPrevious = useCallback(() => {
-    setDirection(-1);
     setCurrentIndex((prev) => (prev === 0 ? factoryImages.length - 1 : prev - 1));
   }, []);
 
   const goToNext = useCallback(() => {
-    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % factoryImages.length);
   }, []);
-
-  const goToSlide = (index: number) => {
-    setDirection(index > currentIndex ? 1 : -1);
-    setCurrentIndex(index);
-  };
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isLightboxOpen) return;
       if (e.key === "ArrowLeft") goToPrevious();
       if (e.key === "ArrowRight") goToNext();
-      if (e.key === "Escape" && isLightboxOpen) setIsLightboxOpen(false);
+      if (e.key === "Escape") setIsLightboxOpen(false);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -95,32 +81,14 @@ const Gallery = () => {
     document.body.style.overflow = isLightboxOpen ? "hidden" : "auto";
   }, [isLightboxOpen]);
 
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 500 : -500,
-      opacity: 0,
-      scale: 0.95,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 500 : -500,
-      opacity: 0,
-      scale: 0.95,
-    }),
-  };
-
   return (
     <PageTransition>
       <div className="min-h-screen bg-background">
         <SEOHead
-          title="Gallery - Sultan Cotton & Bandages"
-          description="Explore our state-of-the-art manufacturing facility through photos and videos."
+          title="Factory Gallery - Sultan Cotton & Bandages"
+          description="Take a virtual tour of our state-of-the-art medical supplies manufacturing facility. See our modern machinery, quality control processes, and production floor."
           canonical="/gallery"
-          keywords={["factory tour", "manufacturing facility", "medical supplies production"]}
+          keywords={["factory tour", "manufacturing facility", "medical supplies production", "quality control"]}
         />
         <BreadcrumbSchema
           items={[
@@ -131,51 +99,180 @@ const Gallery = () => {
         <Navbar />
         
         <main>
-          {/* Hero Section - Compact */}
-          <section className="relative pt-28 pb-16 bg-gradient-to-br from-medical-navy via-primary to-medical-navy">
-            <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/50" />
-            <div className="container mx-auto px-4 lg:px-8 relative z-10 text-center">
+          {/* Hero Section */}
+          <section className="relative pt-24 pb-32 overflow-hidden">
+            {/* Background Image with Overlay */}
+            <div className="absolute inset-0">
+              <img 
+                src={factoryImages[0].src} 
+                alt="Factory" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-medical-navy/95 via-medical-navy/90 to-medical-navy/95" />
+            </div>
+
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 overflow-hidden">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  opacity: [0.1, 0.2, 0.1],
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-20 -left-20 w-96 h-96 bg-primary/30 rounded-full blur-3xl"
+              />
+              <motion.div
+                animate={{ 
+                  scale: [1.2, 1, 1.2],
+                  opacity: [0.1, 0.15, 0.1],
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                className="absolute -bottom-20 -right-20 w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-3xl"
+              />
+            </div>
+
+            <div className="container mx-auto px-4 lg:px-8 relative z-10">
+              <div className="max-w-4xl mx-auto text-center">
+                {/* Badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="inline-flex items-center gap-2 px-5 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-6"
+                >
+                  <Factory className="w-4 h-4 text-cyan-400" />
+                  <span className="text-white/90 text-sm font-medium">Virtual Factory Tour</span>
+                  <Sparkles className="w-4 h-4 text-cyan-400" />
+                </motion.div>
+
+                {/* Main Heading */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6 leading-tight"
+                >
+                  Inside Our{" "}
+                  <span className="relative">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+                      Production Facility
+                    </span>
+                  </span>
+                </motion.h1>
+
+                {/* Description */}
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto leading-relaxed"
+                >
+                  Explore where quality medical supplies are crafted with precision, 
+                  care, and adherence to international standards.
+                </motion.p>
+
+                {/* Stats Row */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="flex flex-wrap justify-center gap-8 md:gap-12"
+                >
+                  {[
+                    { value: "20+", label: "Years of Excellence" },
+                    { value: "1", label: "Production Facility" },
+                    { value: "12+", label: "Gallery Images" },
+                  ].map((stat, index) => (
+                    <div key={index} className="text-center">
+                      <div className="text-3xl md:text-4xl font-bold text-white font-heading mb-1">
+                        {stat.value}
+                      </div>
+                      <div className="text-sm text-white/60">{stat.label}</div>
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* Feature Pills */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="flex flex-wrap justify-center gap-3 mt-12"
               >
-                <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-3">
-                  Our Gallery
-                </h1>
-                <p className="text-lg text-white/80 max-w-xl mx-auto">
-                  Explore our manufacturing facility through videos and images
-                </p>
+                {facilityFeatures.map((feature, index) => (
+                  <motion.div
+                    key={feature.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                  >
+                    <feature.icon className="w-4 h-4 text-cyan-400" />
+                    <span className="text-white/90 text-sm font-medium">{feature.label}</span>
+                  </motion.div>
+                ))}
               </motion.div>
             </div>
+
+            {/* Scroll Indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            >
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2"
+              >
+                <motion.div className="w-1.5 h-1.5 rounded-full bg-white/60" />
+              </motion.div>
+            </motion.div>
           </section>
 
-          {/* Video Section - First */}
-          <section className="py-16 lg:py-20 bg-background">
-            <div className="container mx-auto px-4 lg:px-8">
+          {/* Video Section */}
+          <section className="py-20 lg:py-28 bg-background relative">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-50">
+              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(14,165,233,0.08),transparent_50%)]" />
+              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(14,165,233,0.08),transparent_50%)]" />
+            </div>
+
+            <div className="container mx-auto px-4 lg:px-8 relative z-10">
+              {/* Section Header */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-center mb-10"
+                className="text-center mb-12"
               >
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-                  <Film className="w-4 h-4" />
-                  Factory Tour
-                </span>
-                <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">
-                  Watch Our <span className="text-gradient">Manufacturing Process</span>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full mb-4">
+                  <Play className="w-4 h-4 text-primary" />
+                  <span className="text-primary text-sm font-medium">Factory Tour Video</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4">
+                  Watch Our Production Process
                 </h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  See how we manufacture premium quality medical supplies with modern machinery 
+                  and strict quality control measures
+                </p>
               </motion.div>
 
+              {/* Video Container */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 className="max-w-5xl mx-auto"
               >
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black">
-                  <div className="aspect-video">
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-card border border-border">
+                  {/* Video Glow Effect */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-cyan-500/20 to-primary/20 rounded-3xl blur-xl opacity-50" />
+                  
+                  <div className="relative aspect-video bg-black rounded-3xl overflow-hidden">
                     <video
                       src={FACTORY_VIDEO_URL}
                       controls
@@ -186,193 +283,193 @@ const Gallery = () => {
                     </video>
                   </div>
                 </div>
+
+                {/* Video Info Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                  {[
+                    { icon: Eye, label: "HD Quality", value: "1080p" },
+                    { icon: Factory, label: "Full Tour", value: "Complete" },
+                    { icon: Award, label: "Certified", value: "DRAP" },
+                    { icon: Shield, label: "Standards", value: "ISO" },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={item.label}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="p-4 bg-card rounded-2xl border border-border text-center hover:border-primary/30 hover:shadow-md transition-all duration-300"
+                    >
+                      <item.icon className="w-5 h-5 text-primary mx-auto mb-2" />
+                      <div className="text-sm font-semibold text-foreground">{item.value}</div>
+                      <div className="text-xs text-muted-foreground">{item.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
             </div>
           </section>
 
-          {/* Image Slider Section - After Video */}
-          <section className="py-16 lg:py-20 bg-secondary/20">
-            <div className="container mx-auto px-4 lg:px-8">
+          {/* Photo Gallery Section */}
+          <section className="py-20 lg:py-28 bg-secondary/30 relative overflow-hidden">
+            {/* Decorative Elements */}
+            <div className="absolute top-20 left-10 w-20 h-20 border border-primary/20 rounded-2xl rotate-12 hidden lg:block" />
+            <div className="absolute bottom-20 right-10 w-32 h-32 border border-primary/10 rounded-full hidden lg:block" />
+
+            <div className="container mx-auto px-4 lg:px-8 relative z-10">
+              {/* Section Header */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-center mb-10"
+                className="text-center mb-12"
               >
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-                  <ImageIcon className="w-4 h-4" />
-                  Photo Gallery
-                </span>
-                <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">
-                  Inside Our <span className="text-gradient">Facility</span>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full mb-4">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span className="text-primary text-sm font-medium">Photo Gallery</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-4">
+                  Inside Our Manufacturing Unit
                 </h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  Browse through our facility images showcasing our production floor, 
+                  machinery, quality control labs, and packaging units
+                </p>
               </motion.div>
 
-              {/* Main Slider Container */}
-              <div className="max-w-5xl mx-auto">
-                {/* Slider with Side Previews */}
-                <div className="relative flex items-center justify-center gap-4">
-                  {/* Previous Button */}
-                  <button
-                    onClick={goToPrevious}
-                    className="hidden md:flex shrink-0 w-12 h-12 rounded-full bg-card border border-border items-center justify-center shadow-lg hover:bg-primary hover:text-white hover:border-primary transition-all duration-300"
-                  >
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-
-                  {/* Main Image Area */}
-                  <div className="relative flex-1 max-w-4xl">
-                    {/* Main Image */}
-                    <div 
-                      className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-card shadow-2xl cursor-pointer group"
-                      onClick={() => setIsLightboxOpen(true)}
-                    >
-                      <AnimatePresence initial={false} custom={direction} mode="wait">
-                        <motion.img
-                          key={currentIndex}
-                          custom={direction}
-                          variants={slideVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{
-                            x: { type: "spring", stiffness: 300, damping: 30 },
-                            opacity: { duration: 0.2 },
-                            scale: { duration: 0.2 },
-                          }}
-                          src={factoryImages[currentIndex].src}
-                          alt={`Factory image ${currentIndex + 1}`}
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                      </AnimatePresence>
-
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center">
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-                            <ZoomIn className="w-7 h-7 text-white" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Mobile Navigation */}
-                      <button
-                        onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
-                        className="md:hidden absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); goToNext(); }}
-                        className="md:hidden absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-
-                      {/* Counter Badge */}
-                      <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm">
-                        <span className="text-white text-sm font-medium">
-                          {currentIndex + 1} / {factoryImages.length}
-                        </span>
-                      </div>
-
-                      {/* Auto-play Toggle */}
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setIsAutoPlaying(!isAutoPlaying); }}
-                        className={`absolute top-4 right-4 w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center transition-all duration-300 ${
-                          isAutoPlaying 
-                            ? 'bg-primary text-white' 
-                            : 'bg-black/50 text-white'
+              {/* Gallery Grid - Horizontal flow with varied sizes */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5 auto-rows-[200px] md:auto-rows-[250px]">
+                <AnimatePresence>
+                  {factoryImages.map((image, index) => {
+                    // Varied sizes for visual interest - some span 2 rows
+                    const isLarge = index === 0 || index === 5 || index === 9;
+                    
+                    return (
+                      <motion.div
+                        key={image.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ delay: index * 0.06, duration: 0.5, ease: "easeOut" }}
+                        whileHover={{ y: -5 }}
+                        onClick={() => openLightbox(index)}
+                        className={`relative rounded-2xl overflow-hidden cursor-pointer group shadow-md hover:shadow-2xl transition-all duration-300 ${
+                          isLarge ? 'row-span-2' : ''
                         }`}
                       >
-                        {isAutoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                      </button>
-                    </div>
-
-                    {/* Progress Bar */}
-                    {isAutoPlaying && (
-                      <div className="absolute -bottom-1 left-0 right-0 h-1 bg-border rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-primary"
-                          initial={{ width: "0%" }}
-                          animate={{ width: "100%" }}
-                          transition={{ duration: 3.5, ease: "linear" }}
-                          key={currentIndex}
+                        {/* Image */}
+                        <img
+                          src={image.src}
+                          alt={`Factory interior ${index + 1}`}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          loading="lazy"
                         />
-                      </div>
-                    )}
-                  </div>
+                        
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        
+                        {/* Hover Content */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                          <motion.div
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            whileInView={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.1 }}
+                            className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border-2 border-white/40 mb-3 shadow-lg"
+                          >
+                            <ZoomIn className="w-7 h-7 text-white" />
+                          </motion.div>
+                          <span className="text-white text-sm font-semibold tracking-wide">View Image</span>
+                        </div>
 
-                  {/* Next Button */}
-                  <button
-                    onClick={goToNext}
-                    className="hidden md:flex shrink-0 w-12 h-12 rounded-full bg-card border border-border items-center justify-center shadow-lg hover:bg-primary hover:text-white hover:border-primary transition-all duration-300"
-                  >
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
-                </div>
+                        {/* Corner Badge */}
+                        <div className="absolute top-3 left-3 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm">
+                          <span className="text-white text-xs font-bold">{index + 1}</span>
+                        </div>
 
-                {/* Thumbnail Strip */}
-                <div 
-                  ref={thumbnailRef}
-                  className="flex gap-2 mt-6 overflow-x-auto pb-2 px-1 justify-center"
-                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                  {factoryImages.map((image, index) => (
-                    <button
-                      key={image.id}
-                      onClick={() => goToSlide(index)}
-                      className={`relative shrink-0 rounded-lg overflow-hidden transition-all duration-300 ${
-                        currentIndex === index
-                          ? 'ring-2 ring-primary ring-offset-2 ring-offset-background scale-105 opacity-100'
-                          : 'opacity-50 hover:opacity-80'
-                      }`}
-                    >
-                      <img
-                        src={image.src}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-16 h-12 md:w-20 md:h-14 object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-
-                {/* Dot Indicators */}
-                <div className="flex justify-center gap-1.5 mt-4">
-                  {factoryImages.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => goToSlide(index)}
-                      className={`rounded-full transition-all duration-300 ${
-                        currentIndex === index
-                          ? 'w-6 h-2 bg-primary'
-                          : 'w-2 h-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
-                      }`}
-                    />
-                  ))}
-                </div>
+                        {/* Bottom Gradient Bar */}
+                        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-cyan-500 to-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
               </div>
+
+              {/* Gallery Stats */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-12 flex flex-wrap justify-center gap-6 md:gap-12"
+              >
+                {[
+                  { label: "Production Areas", value: "5+" },
+                  { label: "Quality Checkpoints", value: "10+" },
+                  { label: "Gallery Images", value: "12" },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <div className="text-2xl md:text-3xl font-bold text-primary font-heading">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  </div>
+                ))}
+              </motion.div>
             </div>
           </section>
 
           {/* CTA Section */}
-          <section className="py-16 bg-gradient-to-r from-primary to-cyan-600">
-            <div className="container mx-auto px-4 lg:px-8 text-center">
-              <h2 className="text-2xl md:text-3xl font-heading font-bold text-white mb-4">
-                Want to Visit Our Facility?
-              </h2>
-              <p className="text-white/80 mb-6 max-w-lg mx-auto">
-                Schedule a tour and see our production process firsthand
-              </p>
-              <motion.a
-                href="/contact"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-semibold rounded-full shadow-lg"
-              >
-                Contact Us
-                <ChevronRight className="w-4 h-4" />
-              </motion.a>
+          <section className="py-20 relative overflow-hidden">
+            {/* Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-cyan-600" />
+            {/* Pattern Overlay */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 2px, transparent 2px)`,
+                backgroundSize: '40px 40px'
+              }} />
+            </div>
+
+            <div className="container mx-auto px-4 lg:px-8 relative z-10">
+              <div className="max-w-3xl mx-auto text-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full mb-6">
+                    <Factory className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm font-medium">Schedule a Visit</span>
+                  </div>
+                  
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-4">
+                    Want to See It Live?
+                  </h2>
+                  <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+                    Experience our manufacturing excellence firsthand. 
+                    Schedule a factory tour and see our quality processes in action.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <motion.a
+                      href="/contact"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary font-semibold rounded-full shadow-xl hover:shadow-2xl transition-shadow"
+                    >
+                      <Factory className="w-5 h-5" />
+                      Schedule Factory Tour
+                    </motion.a>
+                    <motion.a
+                      href="/contact"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border border-white/30 hover:bg-white/20 transition-colors"
+                    >
+                      Contact Us
+                      <ChevronRight className="w-5 h-5" />
+                    </motion.a>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </section>
         </main>
@@ -386,72 +483,105 @@ const Gallery = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center"
+              className="fixed inset-0 z-50 bg-black/98 backdrop-blur-xl flex items-center justify-center"
               onClick={() => setIsLightboxOpen(false)}
             >
               {/* Close button */}
-              <button
+              <motion.button
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
                 onClick={() => setIsLightboxOpen(false)}
-                className="absolute top-4 right-4 z-50 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20"
               >
-                <X className="w-6 h-6 text-white" />
-              </button>
+                <X className="w-5 h-5 text-white" />
+              </motion.button>
 
               {/* Counter */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-white/10">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute top-6 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+              >
                 <span className="text-white font-medium">
-                  {currentIndex + 1} / {factoryImages.length}
+                  {currentIndex + 1} <span className="text-white/50">of</span> {factoryImages.length}
                 </span>
-              </div>
+              </motion.div>
 
-              {/* Navigation */}
-              <button
+              {/* Navigation - Previous */}
+              <motion.button
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
                 onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
-                className="absolute left-4 z-50 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                className="absolute left-6 z-50 w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20"
               >
                 <ChevronLeft className="w-6 h-6 text-white" />
-              </button>
+              </motion.button>
 
-              <button
+              {/* Navigation - Next */}
+              <motion.button
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
                 onClick={(e) => { e.stopPropagation(); goToNext(); }}
-                className="absolute right-4 z-50 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
+                className="absolute right-6 z-50 w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors border border-white/20"
               >
                 <ChevronRight className="w-6 h-6 text-white" />
-              </button>
+              </motion.button>
 
               {/* Main Image */}
-              <motion.img
+              <motion.div
                 key={currentIndex}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-                src={factoryImages[currentIndex].src}
-                alt={`Factory image ${currentIndex + 1}`}
-                className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg"
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+                className="relative max-w-[85vw] max-h-[80vh]"
                 onClick={(e) => e.stopPropagation()}
-              />
+              >
+                <img
+                  src={factoryImages[currentIndex].src}
+                  alt={`Factory image ${currentIndex + 1}`}
+                  className="max-w-full max-h-[80vh] object-contain rounded-xl shadow-2xl"
+                />
+              </motion.div>
 
-              {/* Thumbnails */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 p-2 rounded-xl bg-white/10 max-w-[90vw] overflow-x-auto">
+              {/* Thumbnails Strip */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex gap-2 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 max-w-[90vw] overflow-x-auto"
+              >
                 {factoryImages.map((image, index) => (
                   <button
                     key={image.id}
-                    onClick={(e) => { e.stopPropagation(); goToSlide(index); }}
-                    className={`shrink-0 rounded-md overflow-hidden transition-all duration-200 ${
+                    onClick={(e) => { e.stopPropagation(); setCurrentIndex(index); }}
+                    className={`shrink-0 rounded-lg overflow-hidden transition-all duration-300 ${
                       currentIndex === index
-                        ? 'ring-2 ring-white scale-105'
-                        : 'opacity-50 hover:opacity-80'
+                        ? 'ring-2 ring-white ring-offset-2 ring-offset-black/50 scale-110'
+                        : 'opacity-40 hover:opacity-70'
                     }`}
                   >
                     <img
                       src={image.src}
                       alt={`Thumbnail ${index + 1}`}
-                      className="w-14 h-10 object-cover"
+                      className="w-16 h-12 object-cover"
                     />
                   </button>
                 ))}
-              </div>
+              </motion.div>
+
+              {/* Keyboard Hint */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="absolute bottom-6 right-6 hidden md:flex items-center gap-3 text-white/40 text-sm"
+              >
+                <span className="px-2 py-1 rounded bg-white/10 text-xs">←</span>
+                <span className="px-2 py-1 rounded bg-white/10 text-xs">→</span>
+                <span>to navigate</span>
+                <span className="px-2 py-1 rounded bg-white/10 text-xs">ESC</span>
+                <span>to close</span>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

@@ -7,6 +7,7 @@ import CompanyProfile from "@/pages/CompanyProfile";
 import Gallery from "@/pages/Gallery";
 import Contact from "@/pages/Contact";
 import About from "@/pages/About";
+import Checkout from "@/pages/Checkout";
 import NotFound from "@/pages/NotFound";
 
 export const AnimatedRoutes = () => {
@@ -22,6 +23,7 @@ export const AnimatedRoutes = () => {
         <Route path="/company-profile" element={<CompanyProfile />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
