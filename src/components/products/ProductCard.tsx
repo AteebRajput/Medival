@@ -12,7 +12,8 @@ import {
   ShoppingCart,
   ZoomIn,
   Sparkles,
-  Star
+  Star,
+  CreditCard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,7 @@ import {
   DialogContent,
 } from "@/components/ui/dialog";
 import { useCart } from "@/context/CartContext";
+import OrderModal from "@/components/products/OrderModal";
 
 interface ProductSize {
   size: string;
@@ -111,6 +113,7 @@ const FlyingProduct = ({
 export const ProductCard = ({ product }: ProductCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageLightboxOpen, setIsImageLightboxOpen] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [hoveredSizeIndex, setHoveredSizeIndex] = useState<number | null>(null);
   const [defaultSizeIndex] = useState(0);
   const [showFlyingProduct, setShowFlyingProduct] = useState(false);
@@ -167,63 +170,76 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
           {/* Product Image */}
-          <div className="relative aspect-square bg-gradient-to-br from-secondary via-muted to-secondary overflow-hidden">
-            {product.image ? (
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Package className="h-24 w-24 text-muted-foreground/20" />
+          {(() => {
+            const isCottonBandageBPC = product.name.toLowerCase().includes('cotton') && 
+                                        product.name.toLowerCase().includes('bandage') && 
+                                        product.name.toLowerCase().includes('b.p.c');
+            return (
+              <div className={`relative aspect-[4/3] overflow-hidden ${
+                isCottonBandageBPC 
+                  ? 'bg-gradient-to-b from-gray-50 to-gray-100' 
+                  : 'bg-gradient-to-b from-slate-100 to-slate-200'
+              }`}>
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className={`w-full h-full group-hover:scale-105 transition-transform duration-700 ${
+                      isCottonBandageBPC ? 'object-contain p-4' : 'object-cover'
+                    }`}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-50">
+                    <Package className="h-24 w-24 text-gray-300" />
+                  </div>
+                )}
+
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Category badge - Top left */}
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-white/95 text-foreground backdrop-blur-sm shadow-lg px-3 py-1 text-xs font-semibold">
+                    {product.category}
+                  </Badge>
+                </div>
+
+                {/* Status badge - Top right */}
+                {product.comingSoon ? (
+                  <Badge className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-lg animate-pulse px-3 py-1">
+                    <Sparkles className="w-3 h-3 mr-1" />
+                    Coming Soon
+                  </Badge>
+                ) : !product.inStock && (
+                  <Badge variant="destructive" className="absolute top-4 right-4 shadow-lg">
+                    Out of Stock
+                  </Badge>
+                )}
+
+                {/* Quick view button - appears on hover */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <motion.div
+                    initial={{ scale: 0.8, y: 10 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-2 px-5 py-3 bg-white/95 backdrop-blur-sm rounded-full shadow-xl"
+                  >
+                    <Eye className="w-5 h-5 text-primary" />
+                    <span className="text-sm font-semibold text-foreground">Quick View</span>
+                  </motion.div>
+                </div>
+
+                {/* Price preview - bottom of image */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/80 text-sm">{product.sizes.length} sizes available</span>
+                    <span className="text-white font-bold">
+                      From Rs. {Math.min(...product.sizes.map(s => s.price))}
+                    </span>
+                  </div>
+                </div>
               </div>
-            )}
-
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-            {/* Category badge - Top left */}
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-white/95 text-foreground backdrop-blur-sm shadow-lg px-3 py-1 text-xs font-semibold">
-                {product.category}
-              </Badge>
-            </div>
-
-            {/* Status badge - Top right */}
-            {product.comingSoon ? (
-              <Badge className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-lg animate-pulse px-3 py-1">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Coming Soon
-              </Badge>
-            ) : !product.inStock && (
-              <Badge variant="destructive" className="absolute top-4 right-4 shadow-lg">
-                Out of Stock
-              </Badge>
-            )}
-
-            {/* Quick view button - appears on hover */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-              <motion.div
-                initial={{ scale: 0.8, y: 10 }}
-                whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-2 px-5 py-3 bg-white/95 backdrop-blur-sm rounded-full shadow-xl"
-              >
-                <Eye className="w-5 h-5 text-primary" />
-                <span className="text-sm font-semibold text-foreground">Quick View</span>
-              </motion.div>
-            </div>
-
-            {/* Price preview - bottom of image */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="flex items-center justify-between">
-                <span className="text-white/80 text-sm">{product.sizes.length} sizes available</span>
-                <span className="text-white font-bold">
-                  From Rs. {Math.min(...product.sizes.map(s => s.price))}
-                </span>
-              </div>
-            </div>
-          </div>
+            );
+          })()}
 
           {/* Product Info */}
           <div className="p-5 flex-1 flex flex-col relative z-10">
@@ -299,19 +315,19 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
       {/* Product Detail Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-5xl bg-card border-border p-0 overflow-hidden h-[90vh] max-h-[90vh] rounded-3xl">
+        <DialogContent className="max-w-5xl bg-card border-border p-0 overflow-hidden max-h-[90vh] rounded-3xl">
           {/* Close Button */}
           <button
             onClick={() => setIsModalOpen(false)}
-            className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+            className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-gray-800/70 backdrop-blur-sm flex items-center justify-center text-white hover:bg-gray-800/90 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
 
-          <div className="grid md:grid-cols-2 h-full">
-            {/* Image Section - Fixed/Sticky */}
+          <div className="flex flex-col md:flex-row max-h-[90vh]">
+            {/* Image Section - Fixed on desktop, scrolls with content on mobile */}
             <div 
-              className="relative bg-gradient-to-br from-secondary to-muted md:sticky md:top-0 md:h-[90vh] cursor-pointer group"
+              className="relative w-full md:w-1/2 h-[45vh] md:h-[90vh] flex-shrink-0 bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 cursor-pointer group"
               onClick={() => product.image && setIsImageLightboxOpen(true)}
             >
               {product.image ? (
@@ -319,33 +335,47 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain p-8"
                   />
                   {/* Zoom hint */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
-                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/40">
-                      <ZoomIn className="w-7 h-7 text-white" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center border border-gray-200 shadow-lg">
+                      <ZoomIn className="w-6 h-6 text-primary" />
                     </div>
                   </div>
                 </>
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <Package className="h-32 w-32 text-muted-foreground/30" />
+                  <Package className="h-32 w-32 text-gray-300" />
                 </div>
               )}
-              <Badge className="absolute top-4 left-4 bg-white/90 text-foreground shadow-lg">
+              <Badge className="absolute top-4 left-4 bg-white text-foreground shadow-md border border-gray-100 capitalize">
                 {product.category}
               </Badge>
               {product.comingSoon && (
-                <Badge className="absolute top-4 right-14 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-lg">
+                <Badge className="absolute top-14 left-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-lg">
                   <Sparkles className="w-3 h-3 mr-1" />
                   Coming Soon
                 </Badge>
               )}
+              
+              {/* Scroll indicator for mobile */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 md:hidden">
+                <motion.div 
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="flex flex-col items-center text-gray-500"
+                >
+                  <span className="text-xs mb-1 bg-white px-3 py-1 rounded-full shadow-sm">Scroll for details</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                </motion.div>
+              </div>
             </div>
 
-            {/* Details Section - Scrollable */}
-            <div className="p-6 md:p-8 space-y-6 overflow-y-auto max-h-[90vh]">
+            {/* Details Section - Scrollable on desktop */}
+            <div className="w-full md:w-1/2 overflow-y-auto max-h-[45vh] md:max-h-[90vh] p-6 md:p-8 space-y-6">
               {/* Rating */}
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -493,11 +523,24 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
               {/* CTA */}
               {!product.comingSoon && product.inStock && (
-                <div className="pt-4 border-t border-border">
+                <div className="pt-4 border-t border-border space-y-3">
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsModalOpen(false);
+                      setIsOrderModalOpen(true);
+                    }}
+                    size="lg"
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white shadow-xl hover:shadow-2xl transition-all duration-300 py-6 rounded-xl"
+                  >
+                    <CreditCard className="h-5 w-5 mr-2" />
+                    Order Now
+                  </Button>
                   <Button
                     onClick={(e) => handleAddToCart(e, 0)}
                     size="lg"
-                    className="w-full bg-gradient-to-r from-primary to-cyan-600 hover:from-primary/90 hover:to-cyan-600/90 text-white shadow-xl hover:shadow-2xl transition-all duration-300 py-6 rounded-xl"
+                    variant="outline"
+                    className="w-full border-primary/30 hover:bg-primary/10 text-primary shadow-lg transition-all duration-300 py-6 rounded-xl"
                   >
                     <ShoppingCart className="h-5 w-5 mr-2" />
                     Add to Cart - {product.sizes[0].size}
@@ -520,6 +563,18 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Order Modal */}
+      <OrderModal
+        isOpen={isOrderModalOpen}
+        onClose={() => setIsOrderModalOpen(false)}
+        product={{
+          id: product.id,
+          name: product.name,
+          sizes: product.sizes,
+          image: product.image,
+        }}
+      />
     </>
   );
 };

@@ -132,7 +132,7 @@ const Gallery = () => {
             </div>
 
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
-              <div className="max-w-4xl mx-auto text-center">
+              <div className="max-w-5xl mx-auto text-center">
                 {/* Badge */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -145,50 +145,114 @@ const Gallery = () => {
                   <Sparkles className="w-4 h-4 text-cyan-400" />
                 </motion.div>
 
-                {/* Main Heading */}
-                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6 leading-tight"
+                {/* State of the Art Banner */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.7, delay: 0.1 }}
+                  className="relative mb-8"
                 >
-                  Inside Our{" "}
-                  <span className="relative">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-                      Production Facility
-                    </span>
-                  </span>
-                </motion.h1>
+                  {/* Glowing background effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-cyan-500/20 blur-3xl" />
+                  
+                  {/* Main text container */}
+                  <div className="relative">
+                    {/* Decorative lines */}
+                    <div className="flex items-center justify-center gap-4 mb-4">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "60px" }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                        className="h-[2px] bg-gradient-to-r from-transparent to-cyan-400"
+                      />
+                      <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "60px" }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                        className="h-[2px] bg-gradient-to-l from-transparent to-cyan-400"
+                      />
+                    </div>
+
+                    {/* State of the Art text */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                      className="relative inline-block"
+                    >
+                      <span className="text-xs md:text-sm font-bold tracking-[0.3em] uppercase text-cyan-400">
+                        State of the Art
+                      </span>
+                    </motion.div>
+
+                    {/* Production Facility - Large text */}
+                    <motion.h1
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                      className="text-5xl md:text-7xl lg:text-8xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/50 leading-none mt-2"
+                    >
+                      PRODUCTION
+                    </motion.h1>
+                    <motion.h1
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.6 }}
+                      className="text-5xl md:text-7xl lg:text-8xl font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 leading-none"
+                    >
+                      FACILITY
+                    </motion.h1>
+
+                    {/* Decorative underline */}
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 0.8, delay: 0.7 }}
+                      className="h-1 w-48 md:w-64 mx-auto mt-4 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full"
+                    />
+                  </div>
+                </motion.div>
 
                 {/* Description */}
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
                   className="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto leading-relaxed"
                 >
                   Explore where quality medical supplies are crafted with precision, 
                   care, and adherence to international standards.
                 </motion.p>
 
-                {/* Stats Row */}
+                {/* Stats Row - Enhanced */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="flex flex-wrap justify-center gap-8 md:gap-12"
+                  transition={{ duration: 0.5, delay: 0.9 }}
+                  className="flex flex-wrap justify-center gap-6 md:gap-8"
                 >
                   {[
-                    { value: "20+", label: "Years of Excellence" },
-                    { value: "1", label: "Production Facility" },
-                    { value: "12+", label: "Gallery Images" },
+                    { value: "1", label: "State-of-the-Art Facility", icon: Factory },
+                    { value: "20+", label: "Years of Excellence", icon: Award },
+                    { value: "12+", label: "Gallery Images", icon: Eye },
                   ].map((stat, index) => (
-                    <div key={index} className="text-center">
-                      <div className="text-3xl md:text-4xl font-bold text-white font-heading mb-1">
-                        {stat.value}
+                    <motion.div 
+                      key={index} 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1 + index * 0.1 }}
+                      className="group relative"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative px-6 py-4 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-cyan-400/30 transition-all duration-300">
+                        <stat.icon className="w-5 h-5 text-cyan-400 mx-auto mb-2" />
+                        <div className="text-3xl md:text-4xl font-bold text-white font-heading">
+                          {stat.value}
+                        </div>
+                        <div className="text-xs text-white/60 mt-1">{stat.label}</div>
                       </div>
-                      <div className="text-sm text-white/60">{stat.label}</div>
-                    </div>
+                    </motion.div>
                   ))}
                 </motion.div>
               </div>
@@ -197,7 +261,7 @@ const Gallery = () => {
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
                 className="flex flex-wrap justify-center gap-3 mt-12"
               >
                 {facilityFeatures.map((feature, index) => (
@@ -205,11 +269,16 @@ const Gallery = () => {
                     key={feature.label}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                    transition={{ delay: 1.3 + index * 0.1 }}
+                    className="flex items-center gap-2 px-5 py-3 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:bg-white/10 hover:border-cyan-400/30 hover:scale-105 transition-all duration-300 cursor-pointer"
                   >
-                    <feature.icon className="w-4 h-4 text-cyan-400" />
-                    <span className="text-white/90 text-sm font-medium">{feature.label}</span>
+                    <div className="w-8 h-8 rounded-lg bg-cyan-400/10 flex items-center justify-center">
+                      <feature.icon className="w-4 h-4 text-cyan-400" />
+                    </div>
+                    <div>
+                      <span className="text-white/90 text-sm font-semibold block">{feature.label}</span>
+                      <span className="text-white/50 text-xs">{feature.desc}</span>
+                    </div>
                   </motion.div>
                 ))}
               </motion.div>

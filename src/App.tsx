@@ -9,24 +9,30 @@ import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { CartProvider } from "@/context/CartContext";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 import { FloatingCartButton } from "@/components/cart/FloatingCartButton";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <CartProvider>
-            <ScrollToTop />
-            <AnimatedRoutes />
-            <CartSidebar />
-            <FloatingCartButton />
-          </CartProvider>
-        </BrowserRouter>
-      </TooltipProvider>
+      <AuthProvider>
+        <NotificationProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <CartProvider>
+                <ScrollToTop />
+                <AnimatedRoutes />
+                <CartSidebar />
+                <FloatingCartButton />
+              </CartProvider>
+            </BrowserRouter>
+          </TooltipProvider>
+        </NotificationProvider>
+      </AuthProvider>
     </QueryClientProvider>
   </HelmetProvider>
 );

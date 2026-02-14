@@ -9,7 +9,8 @@ import {
   ShoppingBag, 
   Package,
   CheckCircle,
-  ArrowLeft
+  ArrowLeft,
+  Loader2
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -18,10 +19,14 @@ import { SEOHead } from "@/components/seo/SEOHead";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useNavigate, Link } from "react-router-dom";
+import { createOrder, isAirtableConfigured, fetchProductSizes } from "@/lib/airtable";
+import { useNotifications } from "@/contexts/NotificationContext";
+import { toast } from "sonner";
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,14 +45,108 @@ const Checkout = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    if (!formData.name || !formData.email || !formData.phone || !formData.address || !formData.city) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    // Validate phone
+    const phoneRegex = /^(\+92|0)?[0-9]{10}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     setIsSubmitting(true);
 
-    // Simulate order submission
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Create order in Airtable for each cart item
+      if (isAirtableConfigured()) {
+        // First, fetch all product sizes to look up their IDs
+        const allProductSizes = await fetchProductSizes();
+        
+        // Create a map of productId + size -> productSizeId for quick lookup
+        const productSizeMap = new Map<string, string>();
+        allProductSizes.forEach((ps) => {
+          const productIds = ps.fields.product || [];
+          productIds.forEach((productId) => {
+            const key = `${productId}::${ps.fields.size}`;
+            productSizeMap.set(key, ps.id);
+          });
+        });
 
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    clearCart();
+        // Collect all product IDs and their size IDs for a single combined order
+        const productIds: string[] = [];
+        const productSizeIds: string[] = [];
+        let totalOrderAmount = 0;
+        const orderItems: { name: string; size: string; amount: number }[] = [];
+
+        // Process each cart item
+        for (const item of items) {
+          // Add product ID
+          productIds.push(item.productId);
+          
+          // Look up productSize ID
+          const sizeKey = `${item.productId}::${item.size}`;
+          const productSizeId = productSizeMap.get(sizeKey);
+          if (productSizeId) {
+            productSizeIds.push(productSizeId);
+          }
+          
+          totalOrderAmount += item.price * item.quantity;
+          orderItems.push({
+            name: item.productName,
+            size: item.size,
+            amount: item.price * item.quantity,
+          });
+        }
+
+        // Create a single order with all products and sizes
+        await createOrder({
+          customerName: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address + (formData.notes ? ` (Notes: ${formData.notes})` : ''),
+          city: formData.city,
+          totalamount: totalOrderAmount,
+          orderstatus: 'pending',
+          product: productIds, // Array of all product IDs
+          productSize: productSizeIds, // Array of all productSize IDs
+        });
+
+        // Add notification for admin with all items
+        const itemsSummary = orderItems.map(i => `${i.name} (${i.size})`).join(', ');
+        addNotification({
+          orderId: `order-${Date.now()}`,
+          customerName: formData.name,
+          productName: itemsSummary,
+          productSize: orderItems.map(i => i.size).join(', '),
+          totalAmount: totalOrderAmount,
+        });
+
+        toast.success("Order placed successfully!");
+      } else {
+        // If Airtable is not configured, just simulate success
+        toast.warning("Order recorded locally (Airtable not configured)");
+      }
+
+      setIsSuccess(true);
+      clearCart();
+    } catch (error) {
+      console.error("Failed to create order:", error);
+      toast.error("Failed to place order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (items.length === 0 && !isSuccess) {
@@ -293,11 +392,10 @@ const Checkout = () => {
                     className="w-full bg-gradient-medical hover:opacity-90 text-white py-6 text-lg"
                   >
                     {isSubmitting ? (
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full"
-                      />
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Placing Order...
+                      </>
                     ) : (
                       <>
                         <ShoppingBag className="w-5 h-5 mr-2" />

@@ -13,7 +13,7 @@ const products = [
   "Absorbent Cotton Wool",
   "Gauze Pad BPC",
   "Gauze Pad USP Type",
-  "Elasto Crepe Bandage",
+  "Crepe Bandage",
   "Gauze Roll",
   "Gauze Lint",
 ];

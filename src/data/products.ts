@@ -124,7 +124,7 @@ export const products: Product[] = [
     id: "11",
     name: "Pearl White Absorbent Cotton Gauze B.P.C.",
     description: "ABSORBENT COTTON GAUZE B.P.C IS USED FOR ABSORPTION OF BLOOD AND EXUDATES AND PREVENT BLEEDING.",
-    category: "Gauze Pads",
+    category: "Gauze Roll",
     sizes: [
       { size: "1 M × 2.5 M", price: 150 },
       { size: "1 M × 20 M", price: 1200 },
@@ -217,6 +217,7 @@ export const categories: Category[] = [
   { id: "all", name: "All Products", count: products.length },
   { id: "Cotton Bandages", name: "Cotton Bandages", count: products.filter(p => p.category === "Cotton Bandages").length },
   { id: "Gauze Pads", name: "Gauze Pads", count: products.filter(p => p.category === "Gauze Pads").length },
+  { id: "Gauze Roll", name: "Gauze Roll", count: products.filter(p => p.category === "Gauze Roll").length },
   { id: "Gauze Lint", name: "Gauze Lint", count: products.filter(p => p.category === "Gauze Lint").length },
   { id: "Crepe Bandages", name: "Crepe Bandages", count: products.filter(p => p.category === "Crepe Bandages").length },
   { id: "Cotton Wool", name: "Cotton Wool", count: products.filter(p => p.category === "Cotton Wool").length },

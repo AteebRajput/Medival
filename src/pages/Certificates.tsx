@@ -6,14 +6,20 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { CertificateCard } from "@/components/certificates/CertificateCard";
 import { CertificateLightbox } from "@/components/certificates/CertificateLightbox";
 import { CertificateHero } from "@/components/certificates/CertificateHero";
-import { certificates, certificateCategories } from "@/data/certificates";
+import { useAirtableCertificates } from "@/hooks/useAirtableCertificates";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
+import { Loader2 } from "lucide-react";
 
 const Certificates = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedCertificate, setSelectedCertificate] = useState<number>(0);
+
+  // Fetch certificates from Airtable
+  const { data, isLoading, error } = useAirtableCertificates();
+  const certificates = data?.certificates || [];
+  const certificateCategories = data?.certificateCategories || [];
 
   const filteredCertificates = selectedCategory === "all"
     ? certificates
@@ -52,63 +58,79 @@ const Certificates = () => {
           
           <section className="py-16 lg:py-24">
             <div className="container mx-auto px-4 lg:px-8">
-              {/* Category Filters */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-wrap justify-center gap-3 mb-12"
-              >
-                {certificateCategories.map((category) => (
-                  <motion.button
-                    key={category.id}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                      selectedCategory === category.id
-                        ? "bg-gradient-medical text-white shadow-medical"
-                        : "bg-muted text-muted-foreground hover:bg-muted/80"
-                    }`}
-                  >
-                    {category.name}
-                  </motion.button>
-                ))}
-              </motion.div>
-
-              {/* Certificates Grid */}
-              <motion.div
-                layout
-                className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-              >
-                <AnimatePresence mode="popLayout">
-                  {filteredCertificates.map((certificate, index) => (
-                    <motion.div
-                      key={certificate.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                    >
-                      <CertificateCard
-                        certificate={certificate}
-                        onClick={() => openLightbox(index)}
-                      />
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </motion.div>
-
-              {filteredCertificates.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-16"
-                >
-                  <p className="text-xl text-muted-foreground">
-                    No certificates found in this category.
+              {/* Loading State */}
+              {isLoading ? (
+                <div className="flex flex-col items-center justify-center py-24">
+                  <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+                  <p className="text-muted-foreground">Loading certificates...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-24">
+                  <p className="text-xl text-destructive mb-4">
+                    Failed to load certificates. Please try again later.
                   </p>
-                </motion.div>
+                </div>
+              ) : (
+                <>
+                  {/* Category Filters */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-wrap justify-center gap-3 mb-12"
+                  >
+                    {certificateCategories.map((category) => (
+                      <motion.button
+                        key={category.id}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setSelectedCategory(category.id)}
+                        className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                          selectedCategory === category.id
+                            ? "bg-gradient-medical text-white shadow-medical"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {category.name}
+                      </motion.button>
+                    ))}
+                  </motion.div>
+
+                  {/* Certificates Grid */}
+                  <motion.div
+                    layout
+                    className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                  >
+                    <AnimatePresence mode="popLayout">
+                      {filteredCertificates.map((certificate, index) => (
+                        <motion.div
+                          key={certificate.id}
+                          layout
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                          <CertificateCard
+                            certificate={certificate}
+                            onClick={() => openLightbox(index)}
+                          />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </motion.div>
+
+                  {filteredCertificates.length === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center py-16"
+                    >
+                      <p className="text-xl text-muted-foreground">
+                        No certificates found in this category.
+                      </p>
+                    </motion.div>
+                  )}
+                </>
               )}
             </div>
           </section>
