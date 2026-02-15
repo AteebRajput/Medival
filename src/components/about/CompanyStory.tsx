@@ -2,7 +2,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Heart, Target, Eye, X, ZoomIn } from "lucide-react";
 
-const STORY_IMAGE = "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770222861/Gemini_Generated_Image_3bwird3bwird3bwi_1_ewy4gu.png";
+const STORY_IMAGE = "https://res.cloudinary.com/duo8ezh6a/image/upload/v1771168878/Gemini_Generated_Image_vu18uavu18uavu18_zwislm.png";
 
 export const CompanyStory = () => {
   const ref = useRef<HTMLElement>(null);
