@@ -33,14 +33,14 @@ export const ContactMap = () => {
           {/* Google Maps Embed */}
           <div className="aspect-[21/9] min-h-[400px] bg-muted">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d226.14281053463833!2d67.06117378173437!3d24.9223602745381!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33f6cd5e8ecd5%3A0xdd1ff6e7f741eec1!2sSultan%20Cotton%20and%20Bandages!5e0!3m2!1sen!2s!4v1769785237586!5m2!1sen!2s"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14506.080119475124!2d68.84201615014435!3d24.640222349175957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x394dd9a959940fd7%3A0xad4aab4975e997ca!2sSindh%20Small%20Industries%20Badin%2C%20Pakistan!5e0!3m2!1sen!2s!4v1771155215530!5m2!1sen!2s"
               width="100%"
               height="100%"
               style={{ border: 0, minHeight: "400px" }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="MedCotton Location"
+              title="Sultan Cotton and Bandages Factory"
               className="grayscale hover:grayscale-0 transition-all duration-500"
             />
             
@@ -63,7 +63,7 @@ export const ContactMap = () => {
                   Sultan Cotton and Bandages Factory
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                145-46 Sindh Small Industrial Estate Mirwah Rd. Mirpurkhas, Sindh, Pakistan
+                Sindh Small Industries Sindh, Pakistan
                 </p>
                 <a
                   href="https://www.google.com/maps/dir/?api=1&destination=40.7128,-74.0060"
@@ -89,17 +89,17 @@ export const ContactMap = () => {
           {[
             {
               name: "Manufacturing Plant",
-              address: "145-46 Sindh Small Industrial Estate Mirwah Rd. Mirpurkhas, Sindh, Pakistan",
+              address: "Sindh Small Industries Sindh, Pakistan",
               hours: "Mon-Sat: 6:00 AM - 10:00 PM",
             },
-            {
-              name: "Distribution Center",
-              address: "108/2, 9th Commercial street, DHA Phase IV , Karachi, Pakistan",
-              hours: "24/7 Operations",
-            },
+            // {
+            //   name: "Distribution Center",
+            //   address: "108/2, 9th Commercial street, DHA Phase IV , Karachi, Pakistan",
+            //   hours: "24/7 Operations",
+            // },
             {
               name: "Quality Control Lab",
-              address: "145-46 Sindh Small Industrial Estate Mirwah Rd. Mirpurkhas, Sindh, Pakistan",
+              address: "Sindh Small Industries Sindh, Pakistan",
               hours: "Mon-Fri: 8:00 AM - 5:00 PM",
             },
           ].map((location, index) => (

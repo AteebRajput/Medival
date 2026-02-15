@@ -166,16 +166,16 @@ export const Footer = () => {
           >
             <h4 className="font-heading font-semibold text-lg mb-6">Contact Us</h4>
             <ul className="space-y-4">
-              <li className="flex items-start">
+              {/* <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-primary mt-1 mr-3 shrink-0" />
                 <span className="text-white/70">
                 108/2, 9th Commercial street, DHA Phase IV , Karachi, Pakistan
                 </span>
-              </li>
+              </li> */}
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-primary mr-3 shrink-0" />
-                <a href="tel:+1234567890" className="text-white/70 hover:text-white transition-colors">
-                  +92 (333) 3414085
+                <a href="tel:+923333093975" className="text-white/70 hover:text-white transition-colors">
+                +92 (333) 3093975
                 </a>
               </li>
               <li className="flex items-center">

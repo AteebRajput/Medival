@@ -2,22 +2,22 @@ import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Globe, MessageCircle } from "lucide-react";
 
 const contactDetails = [
-  {
-    icon: MapPin,
-    title: "Our Head Office",
-    details: ["108/2, 9th Commercial street", "DHA Phase IV ", "Karachi, Pakistan"],
-    link: null,
-  },
+  // {
+  //   icon: MapPin,
+  //   title: "Our Head Office",
+  //   details: ["108/2, 9th Commercial street", "DHA Phase IV ", "Karachi, Pakistan"],
+  //   link: null,
+  // },
   {
     icon: MapPin,
     title: "Factory Address",
-    details: ["145-46 Sindh Small Industrial Estate", "Mirwah Rd. Mirpurkhas ", "Sindh, Pakistan"],
+    details: ["Sindh Small Industries", "Mirwah Rd. Mirpurkhas ", "Sindh, Pakistan"],
     link: null,
   },
   {
     icon: Phone,
     title: "Phone Numbers",
-    details: ["+92 (333) 3414085", "(0233) 863526"],
+    details: ["+92 (333) 3093975"],
     link: "tel:+1234567890",
   },
   {
@@ -29,8 +29,8 @@ const contactDetails = [
   {
     icon: Clock,
     title: "Business Hours",
-    details: ["Monday - Friday: 8:00 AM - 6:00 PM", "Saturday: 9:00 AM - 2:00 PM", "Sunday: Closed"],
-    link: null,
+    details: ["Monday - Thursday: 8:00 AM - 6:00 PM", "Saturday - Sunday: 9:00 AM - 2:00 PM", "Friday: Closed"],
+    link: null
   },
 ];
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ChevronLeft, 
@@ -49,6 +49,14 @@ const facilityFeatures = [
 const Gallery = () => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Set video to start at 0.01 seconds to show a frame instead of black
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0.01;
+    }
+  }, []);
 
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
@@ -343,10 +351,14 @@ const Gallery = () => {
                   
                   <div className="relative aspect-video bg-black rounded-3xl overflow-hidden">
                     <video
+                      ref={videoRef}
                       src={FACTORY_VIDEO_URL}
                       controls
                       className="w-full h-full object-cover"
                       preload="metadata"
+                      onLoadedMetadata={(e) => {
+                        (e.target as HTMLVideoElement).currentTime = 0.01;
+                      }}
                     >
                       Your browser does not support the video tag.
                     </video>

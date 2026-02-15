@@ -505,7 +505,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                 </div>
               </div>
 
-              {/* Features */}
+              {/* Features
               <div>
                 <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <Check className="h-4 w-4 text-primary" />
@@ -519,7 +519,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* CTA */}
               {!product.comingSoon && product.inStock && (
