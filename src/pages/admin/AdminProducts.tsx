@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -40,6 +41,8 @@ import {
   Search,
   X,
   Image as ImageIcon,
+  Upload,
+  CheckCircle2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -54,15 +57,21 @@ import {
   AirtableProduct,
   AirtableProductSize,
 } from '@/lib/airtable';
+import {
+  uploadToCloudinary,
+  isValidImageFile,
+  formatFileSize,
+  UploadProgress,
+} from '@/lib/cloudinary';
 import { toast } from 'sonner';
 
 const CATEGORIES = [
-  'cotton bandages',
-  'gauze pads',
-  'gauze lint',
-  'crepe bandages',
-  'cotton wool',
-  'plaster of paris',
+  'Gauze Pads',
+  'Gauze Lint',
+  'Crepe Bandages',
+  'Cotton Wool',
+  'Plaster Of Paris',
+  'Gauze Roll',
 ];
 
 interface ProductWithSizes {
@@ -77,7 +86,6 @@ interface ProductFormData {
   productDiscription: string;
   productImage: string;
   category: string;
-  features: string;
   shelfLife: string;
   storageCondition: string;
   precautions: string;
@@ -93,7 +101,6 @@ const defaultFormData: ProductFormData = {
   productDiscription: '',
   productImage: '',
   category: '',
-  features: '',
   shelfLife: '',
   storageCondition: '',
   precautions: '',
@@ -115,6 +122,12 @@ export default function AdminProducts() {
   // Form state
   const [formData, setFormData] = useState<ProductFormData>(defaultFormData);
   const [sizes, setSizes] = useState<SizeFormData[]>([{ size: '', price: 0 }]);
+
+  // Image upload state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Load products
   useEffect(() => {
@@ -152,7 +165,7 @@ export default function AdminProducts() {
       .includes(searchTerm.toLowerCase());
     const matchesCategory =
       selectedCategory === 'all' ||
-      product.fields.category?.toLowerCase() === selectedCategory;
+      product.fields.category?.toLowerCase() === selectedCategory.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
@@ -161,6 +174,8 @@ export default function AdminProducts() {
     setEditingProduct(null);
     setFormData(defaultFormData);
     setSizes([{ size: '', price: 0 }]);
+    setSelectedFile(null);
+    setUploadProgress(null);
     setIsFormOpen(true);
   }
 
@@ -172,7 +187,6 @@ export default function AdminProducts() {
       productDiscription: product.fields.productDiscription || '',
       productImage: product.fields.productImage || '',
       category: product.fields.category || '',
-      features: product.fields.features || '',
       shelfLife: product.fields.shelfLife || '',
       storageCondition: product.fields.storageCondition || '',
       precautions: product.fields.precautions || '',
@@ -182,7 +196,63 @@ export default function AdminProducts() {
         ? product.sizes.map((s) => ({ size: s.fields.size, price: s.fields.price }))
         : [{ size: '', price: 0 }]
     );
+    setSelectedFile(null);
+    setUploadProgress(null);
     setIsFormOpen(true);
+  }
+
+  // Handle file selection
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!isValidImageFile(file)) {
+      toast.error('Please select a valid image file (JPEG, PNG, GIF, WebP, or SVG)');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB');
+      return;
+    }
+
+    setSelectedFile(file);
+    setUploadProgress(null);
+  }
+
+  // Upload image to Cloudinary
+  async function handleImageUpload() {
+    if (!selectedFile) return;
+
+    setUploadingImage(true);
+    setUploadProgress({ loaded: 0, total: 100, percentage: 0 });
+
+    try {
+      const result = await uploadToCloudinary(
+        selectedFile,
+        'products',
+        (progress) => setUploadProgress(progress)
+      );
+
+      setFormData({ ...formData, productImage: result.secure_url });
+      setSelectedFile(null);
+      setUploadProgress(null);
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
+  // Remove selected file
+  function handleRemoveFile() {
+    setSelectedFile(null);
+    setUploadProgress(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   }
 
   // Handle delete confirmation
@@ -199,10 +269,26 @@ export default function AdminProducts() {
     }
 
     setSaving(true);
+    
+    // Auto-upload image if a file is selected but not yet uploaded
+    let finalFormData = { ...formData };
+    if (selectedFile && !formData.productImage) {
+      try {
+        toast.info('Uploading image...');
+        const result = await uploadToCloudinary(selectedFile, 'products');
+        finalFormData.productImage = result.secure_url;
+        setSelectedFile(null);
+        toast.success('Image uploaded successfully');
+      } catch (error) {
+        console.error('Image upload error:', error);
+        toast.error('Failed to upload image. Product will be created without image.');
+      }
+    }
+
     try {
       if (editingProduct) {
         // Update existing product
-        await updateProduct(editingProduct.id, formData);
+        await updateProduct(editingProduct.id, finalFormData);
 
         // Update sizes - delete old ones and create new ones
         for (const oldSize of editingProduct.sizes) {
@@ -222,7 +308,7 @@ export default function AdminProducts() {
         toast.success('Product updated successfully');
       } else {
         // Create new product
-        const newProduct = await createProduct(formData);
+        const newProduct = await createProduct(finalFormData);
 
         // Create sizes
         for (const size of sizes) {
@@ -330,7 +416,7 @@ export default function AdminProducts() {
           <SelectContent className="bg-slate-800 border-slate-700">
             <SelectItem value="all" className="text-white">All Categories</SelectItem>
             {CATEGORIES.map((cat) => (
-              <SelectItem key={cat} value={cat} className="text-white capitalize">
+              <SelectItem key={cat} value={cat} className="text-white">
                 {cat}
               </SelectItem>
             ))}
@@ -465,16 +551,119 @@ export default function AdminProducts() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-slate-300">Product Image URL</Label>
-                <Input
-                  value={formData.productImage}
-                  onChange={(e) =>
-                    setFormData({ ...formData, productImage: e.target.value })
-                  }
-                  placeholder="https://..."
-                  className="bg-slate-900 border-slate-700 text-white"
-                />
+              {/* Product Image Upload Section */}
+              <div className="space-y-3">
+                <Label className="text-slate-300">Product Image</Label>
+                
+                {/* Current Image Preview */}
+                {formData.productImage && (
+                  <div className="relative w-full h-40 bg-slate-900 rounded-lg overflow-hidden border border-slate-700">
+                    <img
+                      src={formData.productImage}
+                      alt="Product preview"
+                      className="w-full h-full object-contain"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, productImage: '' })}
+                      className="absolute top-2 right-2 p-1 bg-red-600 hover:bg-red-500 rounded-full text-white"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                    <div className="absolute bottom-2 left-2 px-2 py-1 bg-emerald-600/90 rounded text-xs text-white flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Uploaded
+                    </div>
+                  </div>
+                )}
+
+                {/* File Upload Area */}
+                {!formData.productImage && (
+                  <div className="space-y-3">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                    />
+                    
+                    {!selectedFile ? (
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full h-32 border-2 border-dashed border-slate-600 rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-emerald-500 hover:bg-slate-800/50 transition-colors"
+                      >
+                        <Upload className="w-8 h-8 text-slate-400" />
+                        <span className="text-sm text-slate-400">Click to upload image</span>
+                        <span className="text-xs text-slate-500">JPEG, PNG, GIF, WebP (max 10MB)</span>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <ImageIcon className="w-8 h-8 text-emerald-500" />
+                            <div>
+                              <p className="text-sm text-white truncate max-w-[200px]">{selectedFile.name}</p>
+                              <p className="text-xs text-slate-400">{formatFileSize(selectedFile.size)}</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleRemoveFile}
+                            className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-red-400"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        
+                        {uploadProgress && (
+                          <div className="mb-3">
+                            <Progress value={uploadProgress.percentage} className="h-2" />
+                            <p className="text-xs text-slate-400 mt-1">{uploadProgress.percentage}% uploaded</p>
+                          </div>
+                        )}
+
+                        <Button
+                          type="button"
+                          onClick={handleImageUpload}
+                          disabled={uploadingImage}
+                          className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                        >
+                          {uploadingImage ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Uploading...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-4 h-4 mr-2" />
+                              Upload to Cloud
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Or enter URL manually */}
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t border-slate-700" />
+                      </div>
+                      <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-slate-800 px-2 text-slate-500">Or enter URL</span>
+                      </div>
+                    </div>
+
+                    <Input
+                      value={formData.productImage}
+                      onChange={(e) =>
+                        setFormData({ ...formData, productImage: e.target.value })
+                      }
+                      placeholder="https://example.com/image.jpg"
+                      className="bg-slate-900 border-slate-700 text-white"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -484,18 +673,6 @@ export default function AdminProducts() {
                   onChange={(e) =>
                     setFormData({ ...formData, productDiscription: e.target.value })
                   }
-                  className="bg-slate-900 border-slate-700 text-white min-h-[80px]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-slate-300">Features (one per line)</Label>
-                <Textarea
-                  value={formData.features}
-                  onChange={(e) =>
-                    setFormData({ ...formData, features: e.target.value })
-                  }
-                  placeholder="Enter features, one per line..."
                   className="bg-slate-900 border-slate-700 text-white min-h-[80px]"
                 />
               </div>

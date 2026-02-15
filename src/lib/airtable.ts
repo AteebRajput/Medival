@@ -10,7 +10,6 @@ export interface AirtableProduct {
   productDiscription: string;
   productImage: string;
   category: string;
-  features: string;
   shelfLife: string;
   storageCondition: string;
   precautions: string;

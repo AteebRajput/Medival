@@ -14,7 +14,6 @@ export interface Product {
   sizes: ProductSize[];
   image: string | null;
   inStock: boolean;
-  features: string[];
   shelfLife: string;
   storageCondition: string;
   precautions: string;
@@ -56,11 +55,6 @@ export function useAirtableProducts() {
               price: size.fields.price || 0,
             }));
 
-          // Parse features from multiline text
-          const features = record.fields.features
-            ? record.fields.features.split('\n').filter((f) => f.trim())
-            : [];
-
           return {
             id: record.id,
             name: record.fields.productName || '',
@@ -69,7 +63,6 @@ export function useAirtableProducts() {
             sizes: productSizes,
             image: record.fields.productImage || null,
             inStock: productSizes.length > 0,
-            features,
             shelfLife: record.fields.shelfLife || '',
             storageCondition: record.fields.storageCondition || '',
             precautions: record.fields.precautions || '',

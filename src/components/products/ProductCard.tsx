@@ -37,7 +37,6 @@ interface Product {
   sizes: ProductSize[];
   image: string | null;
   inStock: boolean;
-  features: string[];
   shelfLife: string;
   storageCondition: string;
   precautions: string;
@@ -504,22 +503,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                   </div>
                 </div>
               </div>
-
-              {/* Features
-              <div>
-                <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <Check className="h-4 w-4 text-primary" />
-                  Key Features
-                </h4>
-                <div className="grid grid-cols-1 gap-2">
-                  {product.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3 text-sm text-muted-foreground p-2 bg-secondary/30 rounded-lg">
-                      <div className="w-2 h-2 rounded-full bg-gradient-to-r from-primary to-cyan-500 shrink-0" />
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </div> */}
 
               {/* CTA */}
               {!product.comingSoon && product.inStock && (

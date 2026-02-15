@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -41,6 +42,9 @@ import {
   Calendar,
   Building2,
   Image as ImageIcon,
+  Upload,
+  X,
+  CheckCircle2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -50,6 +54,13 @@ import {
   deleteCertificate,
   AirtableCertificate,
 } from '@/lib/airtable';
+import {
+  uploadToCloudinary,
+  isValidImageFile,
+  formatFileSize,
+  UploadProgress,
+} from '@/lib/cloudinary';
+import { certificates as localCertificates } from '@/data/certificates';
 import { toast } from 'sonner';
 
 const CATEGORIES = ['iso', 'medical', 'quality'];
@@ -66,7 +77,7 @@ interface FormData {
   issueDate: string;
   expireDate: string;
   issueBody: string;
-  image: string;
+  images: string[]; // Support multiple images
   discription: string;
 }
 
@@ -76,7 +87,7 @@ const defaultFormData: FormData = {
   issueDate: '',
   expireDate: '',
   issueBody: '',
-  image: '',
+  images: [],
   discription: '',
 };
 
@@ -96,6 +107,12 @@ export default function AdminCertificates() {
   // Form state
   const [formData, setFormData] = useState<FormData>(defaultFormData);
 
+  // Image upload state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   // Load certificates
   useEffect(() => {
     loadCertificates();
@@ -104,8 +121,33 @@ export default function AdminCertificates() {
   async function loadCertificates() {
     setLoading(true);
     try {
-      const data = await fetchCertificates();
-      setCertificates(data);
+      const airtableData = await fetchCertificates();
+      
+      // Get local certificates with multiple images (like DRAP Product Registration)
+      const localMultiImageCerts: CertificateRecord[] = localCertificates
+        .filter(cert => Array.isArray(cert.image))
+        .map(cert => ({
+          id: `local-${cert.id}`,
+          createdTime: new Date().toISOString(),
+          fields: {
+            name: cert.name,
+            category: cert.category.toLowerCase(),
+            issueDate: cert.issueDate,
+            expireDate: cert.expiryDate,
+            issueBody: cert.issuingBody,
+            // Store as JSON array string for consistency
+            image: JSON.stringify(cert.image),
+            discription: cert.description,
+          },
+        }));
+
+      // Merge: Airtable + local (avoid duplicates by name)
+      const airtableNames = new Set(airtableData.map(c => c.fields.name?.toLowerCase()));
+      const uniqueLocalCerts = localMultiImageCerts.filter(
+        c => !airtableNames.has(c.fields.name?.toLowerCase())
+      );
+
+      setCertificates([...airtableData, ...uniqueLocalCerts]);
     } catch (error) {
       toast.error('Failed to load certificates');
       console.error(error);
@@ -129,7 +171,27 @@ export default function AdminCertificates() {
   function handleAddNew() {
     setEditingCertificate(null);
     setFormData(defaultFormData);
+    setSelectedFile(null);
+    setUploadProgress(null);
     setIsFormOpen(true);
+  }
+
+  // Helper to parse existing images from Airtable (can be JSON array or single URL)
+  function parseExistingImages(imageField: string | undefined | null): string[] {
+    if (!imageField) return [];
+    
+    // Try to parse as JSON array
+    if (imageField.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(imageField);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        // Not valid JSON
+      }
+    }
+    
+    // Single URL
+    return [imageField];
   }
 
   // Open form for editing
@@ -141,10 +203,75 @@ export default function AdminCertificates() {
       issueDate: cert.fields.issueDate || '',
       expireDate: cert.fields.expireDate || '',
       issueBody: cert.fields.issueBody || '',
-      image: cert.fields.image || '',
+      images: parseExistingImages(cert.fields.image),
       discription: cert.fields.discription || '',
     });
+    setSelectedFile(null);
+    setUploadProgress(null);
     setIsFormOpen(true);
+  }
+
+  // Handle file selection
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!isValidImageFile(file)) {
+      toast.error('Please select a valid image file (JPEG, PNG, GIF, WebP, or SVG)');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB');
+      return;
+    }
+
+    setSelectedFile(file);
+    setUploadProgress(null);
+  }
+
+  // Upload image to Cloudinary
+  async function handleImageUpload() {
+    if (!selectedFile) return;
+
+    setUploadingImage(true);
+    setUploadProgress({ loaded: 0, total: 100, percentage: 0 });
+
+    try {
+      const result = await uploadToCloudinary(
+        selectedFile,
+        'certificates',
+        (progress) => setUploadProgress(progress)
+      );
+
+      // Add new image to the images array
+      setFormData({ ...formData, images: [...formData.images, result.secure_url] });
+      setSelectedFile(null);
+      setUploadProgress(null);
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
+  // Remove an image from the array
+  function handleRemoveImage(index: number) {
+    setFormData({
+      ...formData,
+      images: formData.images.filter((_, i) => i !== index),
+    });
+  }
+
+  // Remove selected file
+  function handleRemoveFile() {
+    setSelectedFile(null);
+    setUploadProgress(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   }
 
   // Handle delete confirmation
@@ -161,12 +288,42 @@ export default function AdminCertificates() {
     }
 
     setSaving(true);
+    
+    // Auto-upload image if a file is selected but not yet uploaded
+    let imagesArray = [...formData.images];
+    if (selectedFile) {
+      try {
+        toast.info('Uploading image...');
+        const result = await uploadToCloudinary(selectedFile, 'certificates');
+        imagesArray.push(result.secure_url);
+        setSelectedFile(null);
+        toast.success('Image uploaded successfully');
+      } catch (error) {
+        console.error('Image upload error:', error);
+        toast.error('Failed to upload image. Certificate will be created without this image.');
+      }
+    }
+
+    // Prepare data for Airtable - store multiple images as JSON array string
+    const airtableData = {
+      name: formData.name,
+      category: formData.category,
+      issueDate: formData.issueDate,
+      expireDate: formData.expireDate,
+      issueBody: formData.issueBody,
+      // Store as JSON array if multiple images, single URL otherwise
+      image: imagesArray.length > 1 
+        ? JSON.stringify(imagesArray)
+        : imagesArray[0] || '',
+      discription: formData.discription,
+    };
+
     try {
       if (editingCertificate) {
-        await updateCertificate(editingCertificate.id, formData);
+        await updateCertificate(editingCertificate.id, airtableData);
         toast.success('Certificate updated successfully');
       } else {
-        await createCertificate(formData);
+        await createCertificate(airtableData);
         toast.success('Certificate created successfully');
       }
 
@@ -272,13 +429,44 @@ export default function AdminCertificates() {
                 <div className="aspect-[4/3] bg-slate-900 relative">
                   {cert.fields.image ? (
                     <img
-                      src={cert.fields.image}
+                      src={(() => {
+                        const img = cert.fields.image;
+                        // Parse JSON array if present
+                        if (img.startsWith('[')) {
+                          try {
+                            const parsed = JSON.parse(img);
+                            return Array.isArray(parsed) ? parsed[0] : img;
+                          } catch {
+                            return img;
+                          }
+                        }
+                        return img;
+                      })()}
                       alt={cert.fields.name}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <Award className="w-16 h-16 text-slate-700" />
+                    </div>
+                  )}
+                  {/* Multiple images indicator */}
+                  {cert.fields.image?.startsWith('[') && (
+                    <div className="absolute bottom-2 left-2 px-2 py-1 bg-emerald-600/90 rounded text-xs text-white flex items-center gap-1">
+                      <ImageIcon className="w-3 h-3" />
+                      {(() => {
+                        try {
+                          return JSON.parse(cert.fields.image).length;
+                        } catch {
+                          return 1;
+                        }
+                      })()} pages
+                    </div>
+                  )}
+                  {/* Local file indicator */}
+                  {cert.id.startsWith('local-') && (
+                    <div className="absolute bottom-2 right-2 px-2 py-1 bg-amber-600/90 rounded text-xs text-white">
+                      Local
                     </div>
                   )}
                   <Badge className={`absolute top-2 right-2 uppercase ${getCategoryColor(cert.fields.category)}`}>
@@ -307,23 +495,33 @@ export default function AdminCertificates() {
                     {cert.fields.discription}
                   </p>
 
-                  <div className="flex gap-2 mt-4">
-                    <Button
-                      size="sm"
-                      onClick={() => handleEdit(cert)}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white"
-                    >
-                      <Pencil className="w-4 h-4 mr-2" />
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => handleDeleteClick(cert)}
-                      className="bg-rose-600 hover:bg-rose-500 text-white"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+                  {/* Check if it's a local certificate */}
+                  {cert.id.startsWith('local-') ? (
+                    <div className="mt-4">
+                      <div className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-700/50 rounded-lg text-sm text-slate-300">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        <span>From Local File (Read Only)</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2 mt-4">
+                      <Button
+                        size="sm"
+                        onClick={() => handleEdit(cert)}
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white"
+                      >
+                        <Pencil className="w-4 h-4 mr-2" />
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => handleDeleteClick(cert)}
+                        className="bg-rose-600 hover:bg-rose-500 text-white"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
@@ -421,16 +619,116 @@ export default function AdminCertificates() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-slate-300">Certificate Image URL</Label>
-                <Input
-                  value={formData.image}
-                  onChange={(e) =>
-                    setFormData({ ...formData, image: e.target.value })
-                  }
-                  placeholder="https://..."
-                  className="bg-slate-900 border-slate-700 text-white"
-                />
+              {/* Certificate Images Upload Section - Multiple Images */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-slate-300">Certificate Images</Label>
+                  <span className="text-xs text-slate-500">
+                    {formData.images.length} image{formData.images.length !== 1 ? 's' : ''} added
+                  </span>
+                </div>
+                
+                {/* Current Images Preview */}
+                {formData.images.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {formData.images.map((img, index) => (
+                      <div key={index} className="relative aspect-[4/3] bg-slate-900 rounded-lg overflow-hidden border border-slate-700 group">
+                        <img
+                          src={img}
+                          alt={`Certificate image ${index + 1}`}
+                          className="w-full h-full object-contain"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(index)}
+                          className="absolute top-1 right-1 p-1 bg-red-600 hover:bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                        <div className="absolute bottom-1 left-1 px-1.5 py-0.5 bg-slate-900/80 rounded text-xs text-white">
+                          Page {index + 1}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* File Upload Area - Always show to add more images */}
+                <div className="space-y-3">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                  
+                  {!selectedFile ? (
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full h-24 border-2 border-dashed border-slate-600 rounded-lg flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-emerald-500 hover:bg-slate-800/50 transition-colors"
+                    >
+                      <Upload className="w-6 h-6 text-slate-400" />
+                      <span className="text-sm text-slate-400">
+                        {formData.images.length > 0 ? 'Click to add another image' : 'Click to upload image'}
+                      </span>
+                      <span className="text-xs text-slate-500">JPEG, PNG, GIF, WebP (max 10MB)</span>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-slate-900 rounded-lg border border-slate-700">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <ImageIcon className="w-8 h-8 text-emerald-500" />
+                          <div>
+                            <p className="text-sm text-white truncate max-w-[200px]">{selectedFile.name}</p>
+                            <p className="text-xs text-slate-400">{formatFileSize(selectedFile.size)}</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleRemoveFile}
+                          className="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-red-400"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      
+                      {uploadProgress && (
+                        <div className="mb-3">
+                          <Progress value={uploadProgress.percentage} className="h-2" />
+                          <p className="text-xs text-slate-400 mt-1">{uploadProgress.percentage}% uploaded</p>
+                        </div>
+                      )}
+
+                      <Button
+                        type="button"
+                        onClick={handleImageUpload}
+                        disabled={uploadingImage}
+                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                      >
+                        {uploadingImage ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4 mr-2" />
+                            Upload to Cloud
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Tip for multiple images */}
+                  {formData.images.length > 0 && (
+                    <p className="text-xs text-slate-500 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                      Multiple pages will be shown with navigation arrows in the certificate viewer
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-2">
