@@ -101,7 +101,7 @@ export const AboutUsSection = () => {
                   >
                     <div className="flex items-center gap-2 text-white">
                       <MapPin className="w-4 h-4" />
-                      <span className="text-sm font-medium">Faisalabad, Pakistan</span>
+                      <span className="text-sm font-medium">Sindh, Pakistan</span>
                     </div>
                   </motion.div>
                 </div>

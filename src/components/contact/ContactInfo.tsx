@@ -11,7 +11,7 @@ const contactDetails = [
   {
     icon: MapPin,
     title: "Factory Address",
-    details: ["Sindh Small Industries", "Mirwah Rd. Mirpurkhas ", "Sindh, Pakistan"],
+    details: ["Sindh Small Industries", "Sindh, Pakistan"],
     link: null,
   },
   {
