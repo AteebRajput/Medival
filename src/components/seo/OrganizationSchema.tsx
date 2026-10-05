@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { socialUrls } from "@/lib/social";
 
 export const OrganizationSchema = () => {
   const schema = {
@@ -28,21 +29,22 @@ export const OrganizationSchema = () => {
     contactPoint: [
       {
         "@type": "ContactPoint",
-        telephone: "+91-22-4567-8900",
+        telephone: "+92-333-3093975",
         contactType: "sales",
-        availableLanguage: ["English", "Hindi"],
+        availableLanguage: ["English", "Urdu"],
       },
       {
         "@type": "ContactPoint",
-        telephone: "+91-22-4567-8901",
+        telephone: "+92-314-0302669",
         contactType: "customer service",
-        availableLanguage: ["English", "Hindi"],
+        availableLanguage: ["English", "Urdu"],
       },
     ],
     sameAs: [
-      "https://facebook.com/sultanbandages",
-      "https://linkedin.com/company/sultanbandages",
-      "https://twitter.com/sultanbandages",
+      socialUrls.facebook,
+      socialUrls.linkedin,
+      socialUrls.x,
+      socialUrls.instagram,
     ],
     hasCredential: [
       {

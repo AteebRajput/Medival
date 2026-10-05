@@ -17,8 +17,8 @@ const contactPageSchema = {
   mainEntity: {
     "@type": "Organization",
     name: "Sultan Bandages",
-    telephone: "+91-22-4567-8900",
-    email: "info@sultanbandages.com",
+    telephone: ["+92-333-3093975", "+92-314-0302669"],
+    email: "info@sultancottonandbandages.com",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Industrial Area, Sector 42",

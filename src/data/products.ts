@@ -193,12 +193,12 @@ export const products: Product[] = [
     description: "PLASTER OF PARIS BANDAGES ARE USED TO IMMOBILIZE BROKEN BONES, PROMOTING PROPER ALIGNMENT AND STABILIZATION FOR HEALING, THEY ALSO PREVENT FURTHER DAMAGE TO SURROUNDING TISSUES.",
     category: "Plaster Of Paris",
     sizes: [
-      { size: "10 CM × 2.7 M", price: 0 },
-      { size: "15 CM × 2.7 M", price: 0 },
+      { size: "10 CM × 2.7 M", price: 467 },
+      { size: "15 CM × 2.7 M", price: 591 },
       // { size: "15 CM × 2.7 M", price: 0 },
     ],
-    image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1770281599/Gemini_Generated_Image_4enls14enls14enl_d597qu.png",
-    inStock: false,
+    image: "https://res.cloudinary.com/duo8ezh6a/image/upload/v1791214367/xifuqvhmqbyvun31coz9.png",
+    inStock: true,
     features: [
       "Quick setting time",
       "High strength when dry",
@@ -208,8 +208,7 @@ export const products: Product[] = [
     ],
     shelfLife: "TO BE USED WITHIN 3 YEARS",
     storageCondition: "TO BE STORED IN A COOL AND DRY PLACE AND TO BE PROTECTED FROM HEAT AND MOISTURE",
-    precautions: "AVOID USING WARM OR HOT WATER, AS IT INCREASES THE HEAT GENERATED DURING THE SETTING PROCESS. MONITOR THE TEMPERATURE OF THE PLASTER DURING APPLICATION, ESPECIALLY IN CHILDREN AND THE ELDERLY.",
-    comingSoon: true,
+    precautions: "For professional use only; apply according to the recommended instructions, avoid excessive tightness and moisture, and discontinue use if skin irritation, excessive heat, numbness, or circulatory problems occur.",
   },
 ];
 

@@ -4,15 +4,17 @@ import {
   Phone, 
   Mail, 
   MapPin, 
-  Facebook, 
-  Twitter, 
-  Linkedin, 
+  Facebook,
+  Linkedin,
   Instagram,
   ArrowRight,
   Heart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { XIcon } from "@/components/icons/XIcon";
+import { socialUrls } from "@/lib/social";
+import { productLinks, productHref } from "@/lib/productLinks";
 
 const quickLinks = [
   { name: "Home", href: "/" },
@@ -24,20 +26,11 @@ const quickLinks = [
   { name: "Contact Us", href: "/contact" },
 ];
 
-const products = [
-  "Cotton Bandage Roll",
-  // "Absorb Surgical Gauze Pads B.P.C",
-  "Cotton Crepe Bandage BP",
-  "Absorbent Cotton Wool",
-  "Absorbent Gauze Roll BPC",
-  "Link Gauze BPC",
-];
-
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Facebook, href: socialUrls.facebook, label: "Facebook" },
+  { icon: XIcon, href: socialUrls.x, label: "X" },
+  { icon: Linkedin, href: socialUrls.linkedin, label: "LinkedIn" },
+  { icon: Instagram, href: socialUrls.instagram, label: "Instagram" },
 ];
 
 export const Footer = () => {
@@ -102,6 +95,8 @@ export const Footer = () => {
                 <a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-primary transition-colors"
                 >
@@ -143,14 +138,14 @@ export const Footer = () => {
           >
             <h4 className="font-heading font-semibold text-lg mb-6">Our Products</h4>
             <ul className="space-y-3">
-              {products.map((product) => (
-                <li key={product}>
+              {productLinks.map((product) => (
+                <li key={product.slug}>
                   <Link
-                    to="/products"
+                    to={productHref(product.slug)}
                     className="text-white/70 hover:text-white transition-colors flex items-center group"
                   >
                     <ArrowRight className="h-4 w-4 mr-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                    {product}
+                    {product.name}
                   </Link>
                 </li>
               ))}
@@ -176,6 +171,12 @@ export const Footer = () => {
                 <Phone className="h-5 w-5 text-primary mr-3 shrink-0" />
                 <a href="tel:+923333093975" className="text-white/70 hover:text-white transition-colors">
                 +92 (333) 3093975
+                </a>
+              </li>
+              <li className="flex items-center">
+                <Phone className="h-5 w-5 text-primary mr-3 shrink-0" />
+                <a href="tel:+923140302669" className="text-white/70 hover:text-white transition-colors">
+                +92 (314) 0302669
                 </a>
               </li>
               <li className="flex items-center">

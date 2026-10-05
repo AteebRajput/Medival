@@ -17,8 +17,11 @@ const contactDetails = [
   {
     icon: Phone,
     title: "Phone Numbers",
-    details: ["+92 (333) 3093975"],
-    link: "tel:+1234567890",
+    details: [
+      { text: "+92 (333) 3093975", href: "tel:+923333093975" },
+      { text: "+92 (314) 0302669", href: "tel:+923140302669" },
+    ],
+    link: null,
   },
   {
     icon: Mail,
@@ -78,17 +81,27 @@ export const ContactInfo = () => {
                 <h3 className="font-heading font-semibold text-foreground mb-1">
                   {item.title}
                 </h3>
-                {item.details.map((detail, i) => (
-                  <p key={i} className="text-sm text-muted-foreground">
-                    {item.link && i === 0 ? (
-                      <a href={item.link} className="hover:text-primary transition-colors">
-                        {detail}
-                      </a>
-                    ) : (
-                      detail
-                    )}
-                  </p>
-                ))}
+                {item.details.map((detail, i) => {
+                  const text = typeof detail === "string" ? detail : detail.text;
+                  const href =
+                    typeof detail === "string"
+                      ? item.link && i === 0
+                        ? item.link
+                        : null
+                      : detail.href;
+
+                  return (
+                    <p key={i} className="text-sm text-muted-foreground">
+                      {href ? (
+                        <a href={href} className="hover:text-primary transition-colors">
+                          {text}
+                        </a>
+                      ) : (
+                        text
+                      )}
+                    </p>
+                  );
+                })}
               </div>
             </div>
           </motion.div>

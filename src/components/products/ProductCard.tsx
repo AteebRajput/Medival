@@ -45,6 +45,8 @@ interface Product {
 
 interface ProductCardProps {
   product: Product;
+  autoOpen?: boolean;
+  onAutoOpened?: () => void;
 }
 
 // Flying cart animation component
@@ -109,7 +111,7 @@ const FlyingProduct = ({
   );
 };
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ product, autoOpen, onAutoOpened }: ProductCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageLightboxOpen, setIsImageLightboxOpen] = useState(false);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
@@ -118,6 +120,17 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const [showFlyingProduct, setShowFlyingProduct] = useState(false);
   const { addToCart } = useCart();
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to and open this product when deep-linked (e.g. from the footer)
+  useEffect(() => {
+    if (!autoOpen) return;
+    cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const timer = setTimeout(() => {
+      setIsModalOpen(true);
+      onAutoOpened?.();
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [autoOpen, onAutoOpened]);
 
   // Reset hover state when modal closes
   useEffect(() => {

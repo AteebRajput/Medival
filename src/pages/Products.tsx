@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -13,6 +14,7 @@ import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { ProductsLoader } from "@/components/ui/ProductsLoader";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { findProductBySlug } from "@/lib/productLinks";
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -21,8 +23,31 @@ const Products = () => {
 
   // Fetch products from Airtable
   const { data, isLoading, error } = useAirtableProducts();
-  const products = data?.products || [];
+  const products = useMemo(() => data?.products || [], [data]);
   const categories = data?.categories || [];
+
+  // Deep link from footer: /products?product=<slug>
+  const [searchParams, setSearchParams] = useSearchParams();
+  const productSlug = searchParams.get("product");
+  const linkedProductId = useMemo(
+    () => (productSlug ? findProductBySlug(products, productSlug)?.id : undefined),
+    [products, productSlug]
+  );
+
+  // Make sure the linked product is visible
+  useEffect(() => {
+    if (productSlug) {
+      setSelectedCategory("all");
+      setSearchQuery("");
+    }
+  }, [productSlug]);
+
+  const clearProductParam = useCallback(() => {
+    setSearchParams((params) => {
+      params.delete("product");
+      return params;
+    }, { replace: true });
+  }, [setSearchParams]);
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
@@ -167,7 +192,11 @@ const Products = () => {
                           exit={{ opacity: 0, scale: 0.9 }}
                           transition={{ duration: 0.3, delay: index * 0.05 }}
                         >
-                          <ProductCard product={product} />
+                          <ProductCard
+                            product={product}
+                            autoOpen={product.id === linkedProductId}
+                            onAutoOpened={clearProductParam}
+                          />
                         </motion.div>
                       ))}
                     </AnimatePresence>

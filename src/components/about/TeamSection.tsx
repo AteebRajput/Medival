@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Linkedin, Mail, User } from "lucide-react";
+import { socialUrls } from "@/lib/social";
 
 const teamMembers = [
   {
@@ -98,7 +99,10 @@ export const TeamSection = () => {
                     <div className="flex gap-3">
                       <motion.a
                         whileHover={{ scale: 1.1 }}
-                        href="#"
+                        href={socialUrls.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="LinkedIn"
                         className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors"
                       >
                         <Linkedin className="h-5 w-5" />

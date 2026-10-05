@@ -44,8 +44,10 @@ export const SEOHead = ({
       <meta property="og:image" content={ogImage.startsWith("http") ? ogImage : `${baseUrl}${ogImage}`} />
       <meta property="og:site_name" content={siteName} />
       
-      {/* Twitter */}
+      {/* X (Twitter) */}
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@sc_andb" />
+      <meta name="twitter:creator" content="@sc_andb" />
       <meta name="twitter:url" content={canonical ? `${baseUrl}${canonical}` : baseUrl} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
